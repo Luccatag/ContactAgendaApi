@@ -12,25 +12,23 @@
 - Created basic Vue view for adding/listing contacts
 - Backend CRUD now uses real database (EF Core)
 - Swagger UI tested and working for all CRUD endpoints
+- FluentValidation integrated and enforced in controller actions
+- Dapper integration implemented and testable via dedicated controller
 
 ## 🚧 Next Steps
-1. **Integrate FluentValidation in controller actions**
-   - Enforce validation rules in API endpoints and return validation errors.
-2. **Implement Dapper integration**
-   - Add a sample Dapper-based query in the repository layer.
-3. **Add unit/integration tests for backend**
-   - Create a test project and add tests for Service/Repository.
-4. **Expand frontend to full CRUD**
+1. **Add unit/integration tests for backend**
+   - Create a test project and add tests for Service/Repository/Dapper endpoints.
+2. **Expand frontend to full CRUD**
    - Implement update and delete in Vue view.
-5. **Refactor frontend to use component-based structure**
+3. **Refactor frontend to use component-based structure**
    - Modularize UI and use vue-router for navigation.
-6. **Use axios for all API calls in frontend**
+4. **Use axios for all API calls in frontend**
    - Replace fetch with axios in Vue components.
-7. **Implement Pinia for state management (optional)**
+5. **Implement Pinia for state management (optional)**
    - Use Pinia to manage contacts state in frontend.
-8. **Add frontend test coverage**
+6. **Add frontend test coverage**
    - Add unit and integration tests for Vue components.
-9. **Bonus: Implement CQRS, authentication/security, RabbitMQ, Dockerfile**
+7. **Bonus: Implement CQRS, authentication/security, RabbitMQ, Dockerfile**
    - Add advanced features as needed.
 
 ## 📋 Full Requirements Reference

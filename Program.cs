@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using ContactAgendaApi.Models;
 using Microsoft.EntityFrameworkCore;
+using ContactAgendaApi.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,7 +37,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=contacts.db"));
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-
+// Register DapperContactRepository for DI
+builder.Services.AddScoped<DapperContactRepository>();
 
 var app = builder.Build();
 
