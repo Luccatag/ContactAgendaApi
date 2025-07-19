@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using ContactAgendaApi.Models;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +30,10 @@ builder.Services.AddSwaggerGen(options =>
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
+// Configure Entity Framework Core to use SQLite as the database provider
+// The connection string uses a local file-based database named "contacts.db"
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite("Data Source=contacts.db"));
 
 
 var app = builder.Build();

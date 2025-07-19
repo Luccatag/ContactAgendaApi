@@ -4,5 +4,17 @@
         <name>ContactAgendaApi</name>
     </assembly>
     <members>
+        <member name="T:ContactAgendaApi.Migrations.InitialCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:ContactAgendaApi.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ContactAgendaApi.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ContactAgendaApi.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>
