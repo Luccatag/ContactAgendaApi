@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "0fiOPvQZQRDo3fKcsNrbes7N3K22EXlx7OldGiicxLU=",
+  "Source": "ContactAgendaApi",
+  "BasePath": "_content/ContactAgendaApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
