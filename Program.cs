@@ -6,7 +6,16 @@ using System.Reflection;
 using ContactAgendaApi.Models;
 using Microsoft.EntityFrameworkCore;
 
+
 var builder = WebApplication.CreateBuilder(args);
+
+
+// Register application services and repositories for dependency injection
+builder.Services.AddScoped<ContactAgendaApi.Interfaces.IContactRepository, ContactAgendaApi.Repositories.ContactRepository>();
+builder.Services.AddScoped<ContactAgendaApi.Interfaces.IContactService, ContactAgendaApi.Services.ContactService>();
+
+// Register AutoMapper and scan for profiles in this assembly
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
