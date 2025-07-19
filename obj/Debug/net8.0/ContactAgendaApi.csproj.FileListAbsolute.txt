@@ -165,3 +165,8 @@ C:\Users\LuccaAg\ContactAgendaApi\bin\Debug\net8.0\ru\Microsoft.CodeAnalysis.Wor
 C:\Users\LuccaAg\ContactAgendaApi\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 C:\Users\LuccaAg\ContactAgendaApi\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 C:\Users\LuccaAg\ContactAgendaApi\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+C:\Users\LuccaAg\ContactAgendaApi\bin\Debug\net8.0\contact-agenda-frontend\package-lock.json
+C:\Users\LuccaAg\ContactAgendaApi\bin\Debug\net8.0\contact-agenda-frontend\package.json
+C:\Users\LuccaAg\ContactAgendaApi\bin\Debug\net8.0\contact-agenda-frontend\tsconfig.app.json
+C:\Users\LuccaAg\ContactAgendaApi\bin\Debug\net8.0\contact-agenda-frontend\tsconfig.json
+C:\Users\LuccaAg\ContactAgendaApi\bin\Debug\net8.0\contact-agenda-frontend\tsconfig.node.json
