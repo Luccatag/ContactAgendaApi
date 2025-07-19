@@ -34,6 +34,8 @@ builder.Services.AddSwaggerGen(options =>
 // The connection string uses a local file-based database named "contacts.db"
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=contacts.db"));
+builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
 
 
 var app = builder.Build();
@@ -47,13 +49,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
 app.MapGet("/weatherforecast", () =>
 {
+    var summaries = new[]
+    {
+        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+    };
+
     var forecast =  Enumerable.Range(1, 5).Select(index =>
         new WeatherForecast
         (
@@ -66,6 +68,9 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast")
 .WithOpenApi();
+
+app.MapControllers();
+app.MapRazorPages();
 
 app.Run();
 

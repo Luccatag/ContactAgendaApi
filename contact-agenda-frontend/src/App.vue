@@ -1,9 +1,14 @@
 <template>
-  <ContactsView />
+  <nav style="margin-bottom: 1rem;">
+    <a href="#" @click.prevent="showAgenda = true">Contact Agenda</a>
+  </nav>
+  <ContactAgendaView v-if="showAgenda" />
 </template>
 
 <script setup lang="ts">
-import ContactsView from './views/ContactsView.vue'
+import { ref } from 'vue'
+import ContactAgendaView from './views/ContactAgendaView.vue'
+const showAgenda = ref(true)
 </script>
 
 <style scoped>
