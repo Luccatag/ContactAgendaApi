@@ -1,14 +1,15 @@
+
 <template>
   <nav style="margin-bottom: 1rem;">
-    <a href="#" @click.prevent="showAgenda = true">Contact Agenda</a>
+    <router-link to="/">Contact Agenda</router-link>
+    <button @click="$router.push('/all-contacts')" style="margin-left: 1rem;">View All Contacts (JSON)</button>
+    <button @click="$router.push('/add-contact')" style="margin-left: 1rem;">Add New Contact</button>
   </nav>
-  <ContactAgendaView v-if="showAgenda" />
+  <router-view />
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import ContactAgendaView from './views/ContactAgendaView.vue'
-const showAgenda = ref(true)
+// No need for showAgenda or direct import, router handles views
 </script>
 
 <style scoped>

@@ -34,6 +34,8 @@ The project itself is simple, but you are encouraged to enhance it to best showc
 - EntityFramework, AutoMapper, FluentValidation, Swashbuckle/Swagger configured
 - PrimeVue, axios, vue-router, pinia configured in frontend
 - Basic Vue view for adding/listing contacts created
+- Frontend CRUD (add, edit, view) implemented and connected to backend (JSON persistence)
+- Navigation between pages using vue-router
 - Backend CRUD supports both real database (EF Core) and JSON file persistence (via repository pattern)
 - Swagger UI tested and working for all CRUD endpoints
 - FluentValidation integrated and enforced in controller actions
@@ -43,17 +45,15 @@ The project itself is simple, but you are encouraged to enhance it to best showc
 ## 🚧 Next Steps
 1. **Add unit/integration tests for backend**
    - Create a test project and add tests for Service, Repository (including JSON persistence), and Dapper endpoints.
-2. **Expand frontend to full CRUD**
-   - Implement update and delete in Vue view.
-3. **Refactor frontend to use component-based structure**
-   - Modularize UI and use vue-router for navigation.
-4. **Use axios for all API calls in frontend**
-   - Replace fetch with axios in Vue components.
-5. **Implement Pinia for state management (optional)**
+2. **Refactor frontend to use component-based structure**
+   - Modularize UI and views for maintainability.
+3. **Use axios for all API calls in frontend**
+   - Replace fetch with axios in Vue components for consistency and better error handling.
+4. **Implement Pinia for state management (optional)**
    - Use Pinia to manage contacts state in frontend.
-6. **Add frontend test coverage**
+5. **Add frontend test coverage**
    - Add unit and integration tests for Vue components.
-7. **Bonus: Implement CQRS, authentication/security, RabbitMQ, Dockerfile**
+6. **Bonus: Implement CQRS, authentication/security, RabbitMQ, Dockerfile**
    - Add advanced features as needed to demonstrate differentials.
 
 ## 📋 Full Requirements Reference

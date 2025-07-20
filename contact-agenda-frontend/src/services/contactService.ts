@@ -12,8 +12,8 @@ export interface ContactCreateDto {
   phone: string
 }
 
-// API base URL - you can make this configurable
-const API_BASE_URL = 'http://192.168.50.21:5290/api'
+// Use relative API base URL so Vite proxy works
+const API_BASE_URL = '/api'
 
 export class ContactService {
   // Get all contacts
