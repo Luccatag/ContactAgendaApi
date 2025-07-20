@@ -34,7 +34,7 @@ The project itself is simple, but you are encouraged to enhance it to best showc
 - EntityFramework, AutoMapper, FluentValidation, Swashbuckle/Swagger configured
 - PrimeVue, axios, vue-router, pinia configured in frontend
 - Basic Vue view for adding/listing contacts created
-- Backend CRUD uses real database (EF Core)
+- Backend CRUD supports both real database (EF Core) and JSON file persistence (via repository pattern)
 - Swagger UI tested and working for all CRUD endpoints
 - FluentValidation integrated and enforced in controller actions
 - Dapper integration implemented and testable via dedicated controller
@@ -42,7 +42,7 @@ The project itself is simple, but you are encouraged to enhance it to best showc
 
 ## 🚧 Next Steps
 1. **Add unit/integration tests for backend**
-   - Create a test project and add tests for Service, Repository, and Dapper endpoints.
+   - Create a test project and add tests for Service, Repository (including JSON persistence), and Dapper endpoints.
 2. **Expand frontend to full CRUD**
    - Implement update and delete in Vue view.
 3. **Refactor frontend to use component-based structure**
