@@ -6,6 +6,8 @@ using System.Reflection;
 using ContactAgendaApi.Models;
 using Microsoft.EntityFrameworkCore;
 using ContactAgendaApi.Repositories;
+using ContactAgendaApi.Interfaces; // Add this at the top
+using ContactAgendaApi.Services; // at the top if not present
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +41,12 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 // Register DapperContactRepository for DI
 builder.Services.AddScoped<DapperContactRepository>();
+// Register JsonContactRepository for DI (all contact CRUD will use contacts.json)
+builder.Services.AddSingleton<IContactRepository>(provider =>
+    new JsonContactRepository("contacts.json")
+);
+builder.Services.AddScoped<IContactService, ContactService>();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 

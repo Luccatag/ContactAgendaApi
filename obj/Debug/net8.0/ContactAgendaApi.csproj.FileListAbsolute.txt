@@ -5,6 +5,7 @@ C:\Users\LuccaAg\ContactAgendaApi\bin\Debug\net8.0\contact-agenda-frontend\packa
 C:\Users\LuccaAg\ContactAgendaApi\bin\Debug\net8.0\contact-agenda-frontend\tsconfig.app.json
 C:\Users\LuccaAg\ContactAgendaApi\bin\Debug\net8.0\contact-agenda-frontend\tsconfig.json
 C:\Users\LuccaAg\ContactAgendaApi\bin\Debug\net8.0\contact-agenda-frontend\tsconfig.node.json
+C:\Users\LuccaAg\ContactAgendaApi\bin\Debug\net8.0\contacts.json
 C:\Users\LuccaAg\ContactAgendaApi\bin\Debug\net8.0\ContactAgendaApi.exe
 C:\Users\LuccaAg\ContactAgendaApi\bin\Debug\net8.0\ContactAgendaApi.deps.json
 C:\Users\LuccaAg\ContactAgendaApi\bin\Debug\net8.0\ContactAgendaApi.runtimeconfig.json

@@ -9,48 +9,43 @@ using Microsoft.EntityFrameworkCore;
 
 public class ContactService : IContactService
 {
-    private readonly AppDbContext _context;
-    public ContactService(AppDbContext context)
+    // Old EF Core context, now commented out:
+    // private readonly AppDbContext _context;
+    // public ContactService(AppDbContext context)
+    // {
+    //     _context = context;
+    // }
+
+    // New: Use IContactRepository for persistence (can be JSON, EF, etc.)
+    private readonly IContactRepository _repository;
+    public ContactService(IContactRepository repository)
     {
-        _context = context;
+        _repository = repository;
     }
 
+    // Now delegates to repository, which can be backed by JSON or DB
     public async Task<IEnumerable<Contact>> GetAllAsync()
     {
-        return await _context.Contacts.AsNoTracking().ToListAsync();
+        return await _repository.GetAllAsync();
     }
 
     public async Task<Contact?> GetByIdAsync(int id)
     {
-        return await _context.Contacts.FindAsync(id);
+        return await _repository.GetByIdAsync(id);
     }
 
     public async Task<Contact> CreateAsync(Contact contact)
     {
-        _context.Contacts.Add(contact);
-        await _context.SaveChangesAsync();
-        return contact;
+        return await _repository.CreateAsync(contact);
     }
 
     public async Task<Contact?> UpdateAsync(Contact updatedContact)
     {
-        var contact = await _context.Contacts.FindAsync(updatedContact.Id);
-        if (contact == null)
-            return null;
-        contact.Name = updatedContact.Name;
-        contact.Email = updatedContact.Email;
-        contact.Phone = updatedContact.Phone;
-        await _context.SaveChangesAsync();
-        return contact;
+        return await _repository.UpdateAsync(updatedContact);
     }
 
     public async Task<bool> DeleteAsync(int id)
     {
-        var contact = await _context.Contacts.FindAsync(id);
-        if (contact == null)
-            return false;
-        _context.Contacts.Remove(contact);
-        await _context.SaveChangesAsync();
-        return true;
+        return await _repository.DeleteAsync(id);
     }
 }

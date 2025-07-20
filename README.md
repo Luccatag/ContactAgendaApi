@@ -1,23 +1,48 @@
-# Contact Agenda Project - Next Steps & Requirements
+
+# Contact Agenda Project
+
+## 📄 Challenge Description (Translated)
+
+You are to develop a CRUD application for a contact agenda (name, email, and phone) using .NET 6 or higher for the backend and Vue.js for the frontend.
+
+**Requirements:**
+- Business rules and validations (you define the rules)
+- Use of design patterns (repositories, services, controllers, interfaces, dependency injection, etc.)
+- Use of Entity Framework
+- Use of accessory libraries/frameworks (e.g., Dapper, AutoMapper, FluentValidation)
+- Use of Swagger
+- Clean and organized code
+- Backend test coverage
+- Strong use of components in the frontend
+
+**Differentials:**
+- Use of CQRS design pattern
+- Authentication/Security in the backend
+- Messaging with RabbitMQ
+- Frontend test coverage
+- Application Dockerfile
+
+The project itself is simple, but you are encouraged to enhance it to best showcase your skills as a developer. You may use any type of database.
 
 ## ✅ Completed Steps
-- Initialized .NET 6+ backend project (ContactAgendaApi)
-- Initialized Vue 3 frontend project (contact-agenda-frontend)
-- Solution structure: Models, DTOs, Repositories, Services, Controllers, Interfaces
-- Set up EF Core and created AppDbContext
-- Scaffolded Contact model (Name, Email, Phone)
-- Planned and implemented API routes (CRUD)
-- Installed and configured EntityFramework, AutoMapper, FluentValidation, Swashbuckle.Swagger
-- Installed and configured PrimeVue, axios, vue-router, pinia (frontend)
-- Created basic Vue view for adding/listing contacts
-- Backend CRUD now uses real database (EF Core)
+- .NET 6+ backend project initialized (ContactAgendaApi)
+- Vue 3 frontend project initialized (contact-agenda-frontend)
+- Solution structured with Models, DTOs, Repositories, Services, Controllers, Interfaces
+- EF Core set up with AppDbContext and SQLite database
+- Contact model scaffolded (Name, Email, Phone)
+- API routes (CRUD) planned and implemented
+- EntityFramework, AutoMapper, FluentValidation, Swashbuckle/Swagger configured
+- PrimeVue, axios, vue-router, pinia configured in frontend
+- Basic Vue view for adding/listing contacts created
+- Backend CRUD uses real database (EF Core)
 - Swagger UI tested and working for all CRUD endpoints
 - FluentValidation integrated and enforced in controller actions
 - Dapper integration implemented and testable via dedicated controller
+- Code organized and follows clean architecture principles
 
 ## 🚧 Next Steps
 1. **Add unit/integration tests for backend**
-   - Create a test project and add tests for Service/Repository/Dapper endpoints.
+   - Create a test project and add tests for Service, Repository, and Dapper endpoints.
 2. **Expand frontend to full CRUD**
    - Implement update and delete in Vue view.
 3. **Refactor frontend to use component-based structure**
@@ -29,7 +54,7 @@
 6. **Add frontend test coverage**
    - Add unit and integration tests for Vue components.
 7. **Bonus: Implement CQRS, authentication/security, RabbitMQ, Dockerfile**
-   - Add advanced features as needed.
+   - Add advanced features as needed to demonstrate differentials.
 
 ## 📋 Full Requirements Reference
 - .NET 6+ backend with clean architecture (Repositories, Services, Controllers, Interfaces, Dependency Injection)
