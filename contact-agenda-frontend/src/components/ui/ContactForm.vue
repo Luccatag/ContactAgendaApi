@@ -42,6 +42,18 @@
       />
       <div v-if="phoneError" class="validation-error">{{ phoneError }}</div>
     </div>
+
+    <div class="form-group checkbox-group">
+      <label class="checkbox-label">
+        <input 
+          id="favorite"
+          v-model="formData.isFavorite" 
+          type="checkbox"
+          class="checkbox-input"
+        />
+        <span class="checkbox-text">⭐ Mark as favorite</span>
+      </label>
+    </div>
     
     <div class="form-actions">
       <button type="submit" class="btn btn-primary" :disabled="loading || hasErrors">
@@ -64,7 +76,10 @@
 
 <script setup>
 import { ref, reactive, computed } from 'vue'
-import { ContactService } from '../../services/contactService'
+import { useContactStore } from '../../stores/contactStore'
+
+// Initialize the contact store
+const contactStore = useContactStore()
 
 const props = defineProps({
   title: {
@@ -88,7 +103,8 @@ const phoneError = ref('')
 const formData = reactive({
   name: '',
   email: '',
-  phone: ''
+  phone: '',
+  isFavorite: false
 })
 
 const hasErrors = computed(() => {
@@ -137,8 +153,15 @@ const handleSubmit = async () => {
   errorMessage.value = ''
   
   try {
-    // Create contact using ContactService
-    const newContact = await ContactService.createContact(formData)
+    // Check for duplicate email using store getter
+    if (contactStore.contactExistsByEmail(formData.email)) {
+      errorMessage.value = 'A contact with this email already exists'
+      return
+    }
+    
+    // Create contact using store action
+    // Store handles optimistic updates and error recovery
+    const newContact = await contactStore.addContact(formData)
     successMessage.value = `Contact "${newContact.name}" added successfully!`
     
     emit('submitted', newContact)
@@ -259,5 +282,31 @@ const handleSubmit = async () => {
   border-radius: 4px;
   margin-top: 1rem;
   border: 1px solid #feb2b2;
+}
+
+/* Checkbox group styles */
+.checkbox-group {
+  margin-bottom: 1.5rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 500;
+  color: #2d3748;
+}
+
+.checkbox-input {
+  width: auto !important;
+  margin-right: 0.5rem;
+  margin-bottom: 0;
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+.checkbox-text {
+  user-select: none;
+  font-size: 1rem;
 }
 </style>

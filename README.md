@@ -73,6 +73,14 @@ The project itself is simple, but you are encouraged to enhance it to best showc
   - Type-safe API calls with TypeScript support
   - Fixed API endpoints to use correct JSON persistence routes (/api/contacts)
 
+- **Pinia state management implemented**
+  - Centralized contact state management across all components
+  - Intelligent caching to prevent unnecessary API calls
+  - Optimistic updates for immediate UI feedback
+  - Real-time search functionality with computed properties
+  - Duplicate email detection before contact creation
+  - Automatic error handling and recovery mechanisms
+
 ## 🚧 Next Steps
 1. **Add unit/integration tests for backend**
    - Create a test project and add tests for Service, Repository (including JSON persistence), and Dapper endpoints.
@@ -80,8 +88,8 @@ The project itself is simple, but you are encouraged to enhance it to best showc
    - ~~Modularize UI and views for maintainability.~~
 3. ~~**Use axios for all API calls in frontend**~~ ✅ **COMPLETED**
    - ~~Replace fetch with axios in Vue components for consistency and better error handling.~~
-4. **Implement Pinia for state management (optional)**
-   - Use Pinia to manage contacts state in frontend.
+4. ~~**Implement Pinia for state management (optional)**~~ ✅ **COMPLETED**
+   - ~~Use Pinia to manage contacts state in frontend.~~
 5. **Add frontend test coverage**
    - Add unit and integration tests for Vue components.
 6. **Bonus: Implement CQRS, authentication/security, RabbitMQ, Dockerfile**
@@ -99,7 +107,7 @@ The project itself is simple, but you are encouraged to enhance it to best showc
 - PrimeVue for UI components ✅
 - axios for API calls ✅
 - vue-router for navigation ✅
-- pinia for state management (optional) ✅ (configured but not actively used)
+- pinia for state management (optional) ✅ (actively used for centralized contact state)
 - Component-based frontend structure ✅
 - Frontend test coverage ❌
 - Bonus: CQRS, authentication/security, RabbitMQ, Dockerfile ❌
@@ -117,9 +125,11 @@ The project itself is simple, but you are encouraged to enhance it to best showc
 
 ### Frontend Architecture
 - **Component Structure**: Organized into `layout/` and `ui/` folders
-- **State Management**: Axios-based service layer with centralized error handling
+- **State Management**: Pinia store with centralized contact data, optimistic updates, and intelligent caching
+- **API Layer**: Axios-based service layer with centralized error handling
 - **Responsive Design**: CSS Grid with automatic column adjustment based on screen width
 - **Validation**: Client-side regex validation with server-side FluentValidation backup
+- **Search Functionality**: Real-time contact filtering across name, email, and phone fields
 
 ## 🔄 How to Switch from JSON to SQLite Database
 

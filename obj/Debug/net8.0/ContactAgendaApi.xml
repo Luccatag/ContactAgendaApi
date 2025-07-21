@@ -16,5 +16,17 @@
         <member name="M:ContactAgendaApi.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:ContactAgendaApi.Migrations.AddIsFavoriteToContact">
+            <inheritdoc />
+        </member>
+        <member name="M:ContactAgendaApi.Migrations.AddIsFavoriteToContact.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ContactAgendaApi.Migrations.AddIsFavoriteToContact.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ContactAgendaApi.Migrations.AddIsFavoriteToContact.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>

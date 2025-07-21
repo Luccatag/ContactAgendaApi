@@ -7,12 +7,14 @@ export interface Contact {
   name: string
   email: string
   phone: string
+  isFavorite: boolean
 }
 
 export interface ContactCreateDto {
   name: string
   email: string
   phone: string
+  isFavorite?: boolean
 }
 
 // Configure axios instance with base URL and default settings
@@ -114,6 +116,21 @@ export class ContactService {
       await apiClient.delete(`/contacts/${id}`)
     } catch (error) {
       console.error(`Error deleting contact ${id}:`, error)
+      throw error
+    }
+  }
+
+  /**
+   * Toggle the favorite status of a contact
+   * @param id - Contact ID to toggle favorite status
+   * @returns Promise<Contact> The updated contact with new favorite status
+   */
+  static async toggleFavorite(id: number): Promise<Contact> {
+    try {
+      const response = await apiClient.patch<Contact>(`/contacts/${id}/favorite`)
+      return response.data
+    } catch (error) {
+      console.error(`Error toggling favorite for contact ${id}:`, error)
       throw error
     }
   }

@@ -65,7 +65,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { ContactService } from '../services/contactService'
+import { useContactStore } from '../stores/contactStore'
+
+// Initialize router and contact store
+const router = useRouter()
+const contactStore = useContactStore()
 
 interface FormData {
   name: string
@@ -73,7 +77,6 @@ interface FormData {
   phone: string
 }
 
-const router = useRouter()
 const loading = ref(false)
 const successMessage = ref('')
 const errorMessage = ref('')
@@ -117,8 +120,14 @@ const handleSubmit = async () => {
   errorMessage.value = ''
   
   try {
-    // Create contact using ContactService
-    const newContact = await ContactService.createContact(formData.value)
+    // Check for duplicate email using store getter
+    if (contactStore.contactExistsByEmail(formData.value.email)) {
+      errorMessage.value = 'A contact with this email already exists'
+      return
+    }
+    
+    // Create contact using store action
+    const newContact = await contactStore.addContact(formData.value)
     successMessage.value = `Contact "${newContact.name}" added successfully!`
     
     // Reset form

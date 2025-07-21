@@ -83,4 +83,23 @@ public class ContactsController : ControllerBase
             return NotFound();
         return NoContent();
     }
+
+    // PATCH: api/contacts/{id}/favorite
+    // Toggles the favorite status of a contact
+    [HttpPatch("{id}/favorite")]
+    public async Task<ActionResult<ContactReadDto>> ToggleFavorite(int id)
+    {
+        var contact = await _service.GetByIdAsync(id);
+        if (contact == null)
+            return NotFound();
+
+        // Toggle the favorite status
+        contact.IsFavorite = !contact.IsFavorite;
+        
+        var updated = await _service.UpdateAsync(contact);
+        if (updated == null)
+            return NotFound();
+            
+        return Ok(_mapper.Map<ContactReadDto>(updated));
+    }
 }

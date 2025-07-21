@@ -11,6 +11,9 @@ public class ContactCreateDto
 
     // The phone number of the contact (required, must be valid)
     public string Phone { get; set; } = string.Empty;
+
+    // Whether the contact is marked as favorite (optional, defaults to false)
+    public bool IsFavorite { get; set; } = false;
 }
 
 // DTO for reading (retrieving) a contact
@@ -27,6 +30,9 @@ public class ContactReadDto
 
     // The phone number of the contact
     public string Phone { get; set; } = string.Empty;
+
+    // Whether the contact is marked as favorite
+    public bool IsFavorite { get; set; } = false;
 }
 
 // DTO for updating an existing contact
@@ -40,4 +46,7 @@ public class ContactUpdateDto
 
     // The phone number of the contact (required, must be valid)
     public string Phone { get; set; } = string.Empty;
+
+    // Whether the contact is marked as favorite (optional, defaults to false)
+    public bool IsFavorite { get; set; } = false;
 }

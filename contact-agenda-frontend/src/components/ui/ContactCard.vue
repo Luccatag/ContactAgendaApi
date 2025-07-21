@@ -5,8 +5,18 @@
     <!-- Display mode: Shows contact information with action buttons -->
     <div v-if="!isEditing" class="contact-display">
       <div class="contact-info">
-        <!-- Contact name as the main heading -->
-        <h3 class="contact-name">{{ contact.name }}</h3>
+        <!-- Contact name with favorite heart button -->
+        <div class="contact-header">
+          <h3 class="contact-name">{{ contact.name }}</h3>
+          <button 
+            @click="toggleFavorite" 
+            class="btn btn-favorite"
+            :class="{ 'is-favorite': contact.isFavorite }"
+            :title="contact.isFavorite ? 'Remove from favorites' : 'Add to favorites'"
+          >
+            {{ contact.isFavorite ? '❤️' : '🤍' }}
+          </button>
+        </div>
         
         <!-- Contact details section -->
         <div class="contact-details">
@@ -58,6 +68,18 @@
             required 
           />
         </div>
+
+        <!-- Favorite checkbox -->
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input 
+              v-model="editData.isFavorite" 
+              type="checkbox"
+              class="checkbox-input"
+            />
+            <span class="checkbox-text">⭐ Mark as favorite</span>
+          </label>
+        </div>
         
         <!-- Form action buttons -->
         <div class="form-actions">
@@ -74,7 +96,10 @@
 
 <script setup>
 import { ref, reactive } from 'vue'
-import { ContactService } from '../../services/contactService'
+import { useContactStore } from '../../stores/contactStore'
+
+// Initialize the contact store
+const contactStore = useContactStore()
 
 /**
  * Props definition
@@ -102,7 +127,8 @@ const editError = ref('') // Stores any error messages during editing
 const editData = reactive({
   name: '',
   email: '',
-  phone: ''
+  phone: '',
+  isFavorite: false
 })
 
 /**
@@ -113,6 +139,7 @@ const startEdit = () => {
   editData.name = props.contact.name
   editData.email = props.contact.email
   editData.phone = props.contact.phone
+  editData.isFavorite = props.contact.isFavorite
   editError.value = ''
 }
 
@@ -126,8 +153,8 @@ const cancelEdit = () => {
 
 /**
  * Validates and saves the edited contact data
+ * Uses Pinia store for centralized state management
  * Includes client-side validation for email and phone formats
- * Makes API call to update the contact on the server
  */
 const saveEdit = async () => {
   editError.value = ''
@@ -149,26 +176,44 @@ const saveEdit = async () => {
   }
   
   try {
-    // Make API call to update the contact using ContactService
-    const updatedContact = await ContactService.updateContact(props.contact.id, {
+    // Use store action instead of direct API call
+    // Store handles optimistic updates and error recovery
+    const updatedContact = await contactStore.updateContact(props.contact.id, {
       name: editData.name,
       email: editData.email,
-      phone: editData.phone
+      phone: editData.phone,
+      isFavorite: editData.isFavorite
     })
     
-    // Emit the updated contact data to parent component
+    // Emit the updated contact data to parent component for any additional handling
     emit('updated', updatedContact)
     
     // Exit edit mode
     isEditing.value = false
   } catch (error) {
-    editError.value = error.message
+    // Error is already handled by the store, just display it
+    editError.value = error.message || 'Failed to update contact'
+  }
+}
+
+/**
+ * Toggles the favorite status of the contact
+ * Uses Pinia store for centralized state management with optimistic updates
+ */
+const toggleFavorite = async () => {
+  try {
+    // Use store action to toggle favorite status
+    // Store handles optimistic updates and error recovery
+    await contactStore.toggleFavorite(props.contact.id)
+  } catch (error) {
+    console.error('Error toggling favorite:', error)
+    // Store already handles error display, but we could add user-facing feedback here
   }
 }
 
 /**
  * Deletes the contact after user confirmation
- * Makes API call to delete the contact from the server
+ * Uses Pinia store for centralized state management
  */
 const deleteContact = async () => {
   // Show confirmation dialog
@@ -177,14 +222,15 @@ const deleteContact = async () => {
   }
   
   try {
-    // Make API call to delete the contact using ContactService
-    await ContactService.deleteContact(props.contact.id)
+    // Use store action instead of direct API call
+    // Store handles optimistic updates and error recovery
+    await contactStore.deleteContact(props.contact.id)
     
-    // Emit the deleted contact ID to parent component
+    // Emit the deleted contact ID to parent component for any additional handling
     emit('deleted', props.contact.id)
   } catch (error) {
     console.error('Error deleting contact:', error)
-    // Could add user-facing error handling here
+    // Store already handles error display, but we could add user-facing feedback here
   }
 }
 </script>
@@ -218,11 +264,20 @@ const deleteContact = async () => {
   flex-direction: column;
 }
 
+/* Header section with name and favorite button */
+.contact-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
 .contact-name {
-  margin: 0 0 0.75rem 0;
+  margin: 0;
   color: #2d3748;
   font-size: 1.25rem;
   font-weight: 600;
+  flex: 1;
 }
 
 .contact-details {
@@ -316,6 +371,38 @@ const deleteContact = async () => {
   background: #c53030;
 }
 
+/* Favorite button - heart emoji button */
+.btn-favorite {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  padding: 0.25rem;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  margin-left: 0.5rem;
+}
+
+.btn-favorite:hover {
+  background: rgba(0, 0, 0, 0.05);
+  transform: scale(1.1);
+}
+
+.btn-favorite.is-favorite {
+  animation: pulse 0.3s ease;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
 /* Save button - success green color */
 .btn-save {
   background: #38a169;
@@ -344,6 +431,32 @@ const deleteContact = async () => {
   padding: 0.5rem;
   background: #fed7d7;
   border-radius: 4px;
+}
+
+/* Checkbox group styles */
+.checkbox-group {
+  margin-bottom: 1rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 500;
+  color: #2d3748;
+  font-size: 0.9rem;
+}
+
+.checkbox-input {
+  width: auto !important;
+  margin-right: 0.5rem;
+  margin-bottom: 0;
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+.checkbox-text {
+  user-select: none;
 }
 
 /* Responsive design for mobile devices */

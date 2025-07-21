@@ -2,27 +2,48 @@
   <div class="all-contacts-view">
     <div class="page-header">
       <h1 class="page-title">Contact Agenda</h1>
-      <p class="page-subtitle">Manage your contact list</p>
+      <p class="page-subtitle">Manage your contact list ({{ contactStore.contactCount }} contacts)</p>
+      
+      <!-- Search functionality -->
+      <div class="search-container">
+        <input 
+          v-model="searchTerm" 
+          type="text" 
+          placeholder="Search contacts by name, email, or phone..."
+          class="search-input"
+        />
+      </div>
     </div>
     
-    <div v-if="loading" class="loading">
+    <!-- Loading state -->
+    <div v-if="contactStore.loading" class="loading">
       <p>Loading contacts...</p>
     </div>
     
-    <div v-else-if="error" class="error-message">
-      <p>{{ error }}</p>
-      <button @click="fetchContacts" class="btn btn-primary">Try Again</button>
+    <!-- Error state -->
+    <div v-else-if="contactStore.error" class="error-message">
+      <p>{{ contactStore.error }}</p>
+      <button @click="contactStore.fetchContacts(true)" class="btn btn-primary">Try Again</button>
+      <button @click="contactStore.clearError" class="btn btn-secondary">Dismiss</button>
     </div>
     
-    <div v-else-if="contacts.length === 0" class="empty-state">
+    <!-- Empty state -->
+    <div v-else-if="filteredContacts.length === 0 && contactStore.contactCount === 0" class="empty-state">
       <h3>No contacts found</h3>
       <p>Start by adding your first contact.</p>
       <router-link to="/add-contact" class="btn btn-primary">Add Contact</router-link>
     </div>
     
+    <!-- No search results -->
+    <div v-else-if="filteredContacts.length === 0 && searchTerm.trim()" class="empty-state">
+      <h3>No contacts match your search</h3>
+      <p>Try a different search term or <button @click="searchTerm = ''" class="link-button">clear search</button>.</p>
+    </div>
+    
+    <!-- Contacts grid -->
     <div v-else class="contacts-grid">
       <ContactCard 
-        v-for="contact in contacts" 
+        v-for="contact in filteredContacts" 
         :key="contact.id" 
         :contact="contact"
         @updated="handleContactUpdated"
@@ -33,43 +54,51 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import ContactCard from '../components/ui/ContactCard.vue'
-import { ContactService } from '../services/contactService'
+import { useContactStore } from '../stores/contactStore'
 
-const contacts = ref([])
-const loading = ref(true)
-const error = ref('')
+// Initialize the contact store
+const contactStore = useContactStore()
 
-onMounted(fetchContacts)
+// Local search functionality
+const searchTerm = ref('')
+
+onMounted(async () => {
+  // Fetch contacts when component mounts
+  // Store handles caching, so this won't make unnecessary API calls
+  await contactStore.fetchContacts()
+})
 
 /**
- * Fetch all contacts using the ContactService
+ * Handle contact update from ContactCard component
+ * The store automatically updates all reactive references
+ * @param updatedContact - The updated contact data
  */
-async function fetchContacts() {
-  loading.value = true
-  error.value = ''
-  
-  try {
-    contacts.value = await ContactService.getAllContacts()
-  } catch (e) {
-    error.value = e.message || 'Failed to fetch contacts'
-    console.error('Error fetching contacts:', e)
-  } finally {
-    loading.value = false
-  }
-}
-
 function handleContactUpdated(updatedContact) {
-  const index = contacts.value.findIndex(c => c.id === updatedContact.id)
-  if (index !== -1) {
-    contacts.value[index] = updatedContact
-  }
+  // With Pinia store, this is handled automatically by the updateContact action
+  // We don't need to manually update local state anymore
+  console.log('Contact updated via store:', updatedContact.name)
 }
 
+/**
+ * Handle contact deletion from ContactCard component
+ * The store automatically removes from all reactive references
+ * @param deletedId - The ID of the deleted contact
+ */
 function handleContactDeleted(deletedId) {
-  contacts.value = contacts.value.filter(c => c.id !== deletedId)
+  // With Pinia store, this is handled automatically by the deleteContact action
+  // We don't need to manually filter local state anymore
+  console.log('Contact deleted via store:', deletedId)
 }
+
+/**
+ * Get filtered contacts based on search term
+ * Uses the store's computed search function
+ */
+const filteredContacts = computed(() => {
+  return contactStore.searchContacts(searchTerm.value)
+})
 </script>
 
 <style scoped>
@@ -95,6 +124,40 @@ function handleContactDeleted(deletedId) {
 .page-subtitle {
   color: #718096;
   font-size: 1.125rem;
+  margin-bottom: 1.5rem;
+}
+
+.search-container {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: #667eea;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: inherit;
+}
+
+.link-button:hover {
+  color: #5a67d8;
 }
 
 .loading, .error-message, .empty-state {
