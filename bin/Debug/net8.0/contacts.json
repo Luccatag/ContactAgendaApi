@@ -1,6 +1,9 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 [{"Id":1,"Name":"Alice person 2","Email":"alice@email.com","Phone":"123456789"},{"Id":3,"Name":"jesus","Email":"string@email.try","Phone":"6786786789"},{"Id":4,"Name":"person","Email":"person@email.com","Phone":"6667778888"},{"Id":5,"Name":"new person","Email":"sljnfldsjfsd@gmail.com","Phone":"32849832749324832"},{"Id":6,"Name":"sd","Email":"sd@qw.com","Phone":"1112223333"},{"Id":7,"Name":"asdasd","Email":"as@a.11","Phone":"1212121212"}]
 =======
+=======
+>>>>>>> parent of 5a70f19 (Refactor contact management UI and implement authentication)
 [
     {
         "Id": 1,
@@ -14,5 +17,9 @@
         "Email": "string@email.try",
         "Phone": "6786786789"
     }
+<<<<<<< HEAD
+]
+>>>>>>> parent of 5a70f19 (Refactor contact management UI and implement authentication)
+=======
 ]
 >>>>>>> parent of 5a70f19 (Refactor contact management UI and implement authentication)

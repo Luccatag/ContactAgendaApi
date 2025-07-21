@@ -14,7 +14,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 <<<<<<< HEAD
+<<<<<<< HEAD
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5a70f190d55c592c9f0a4ad4141b6dd60e1e55b3")]
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8d977cfe62b27a9d0e3466556b580d7ba75ffa85")]
+>>>>>>> parent of 5a70f19 (Refactor contact management UI and implement authentication)
 =======
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8d977cfe62b27a9d0e3466556b580d7ba75ffa85")]
 >>>>>>> parent of 5a70f19 (Refactor contact management UI and implement authentication)
