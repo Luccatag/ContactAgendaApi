@@ -29,4 +29,10 @@
     <Compile Include="Repositories\DapperContactRepository.cs" />
   </ItemGroup> -->
 
+  <ItemGroup>
+    <Compile Remove="ContactAgendaApi.Tests\**" />
+    <EmbeddedResource Remove="ContactAgendaApi.Tests\**" />
+    <None Remove="ContactAgendaApi.Tests\**" />
+  </ItemGroup>
+
 </Project>
