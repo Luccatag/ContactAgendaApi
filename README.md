@@ -51,14 +51,19 @@ The project itself is simple, but you are encouraged to enhance it to best showc
   - Client-side validation with regex patterns
   - Server-side validation before API calls
   - User-friendly error messages and real-time validation
+- **Axios integration completed**
+  - Replaced all fetch calls with axios for consistency
+  - Centralized API service with proper error handling
+  - Enhanced error messages and timeout configuration
+  - Type-safe API calls with TypeScript support
 
 ## 🚧 Next Steps
 1. **Add unit/integration tests for backend**
    - Create a test project and add tests for Service, Repository (including JSON persistence), and Dapper endpoints.
 2. ~~**Refactor frontend to use component-based structure**~~ ✅ **COMPLETED**
    - ~~Modularize UI and views for maintainability.~~
-3. **Use axios for all API calls in frontend**
-   - Replace fetch with axios in Vue components for consistency and better error handling.
+3. ~~**Use axios for all API calls in frontend**~~ ✅ **COMPLETED**
+   - ~~Replace fetch with axios in Vue components for consistency and better error handling.~~
 4. **Implement Pinia for state management (optional)**
    - Use Pinia to manage contacts state in frontend.
 5. **Add frontend test coverage**
@@ -76,7 +81,7 @@ The project itself is simple, but you are encouraged to enhance it to best showc
 - Unit/integration tests for backend ❌
 - Vue 3 frontend with Vite ✅
 - PrimeVue for UI components ✅
-- axios for API calls ❌ (currently using fetch)
+- axios for API calls ✅
 - vue-router for navigation ✅
 - pinia for state management (optional) ✅ (configured but not actively used)
 - Component-based frontend structure ✅

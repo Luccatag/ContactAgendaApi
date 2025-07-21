@@ -1,3 +1,6 @@
+import axios from 'axios'
+import type { AxiosResponse } from 'axios'
+
 // Type definitions that match your backend DTOs
 export interface Contact {
   id: number
@@ -12,65 +15,106 @@ export interface ContactCreateDto {
   phone: string
 }
 
-// Use relative API base URL so Vite proxy works
-const API_BASE_URL = '/api'
+// Configure axios instance with base URL and default settings
+const apiClient = axios.create({
+  baseURL: '/api',
+  timeout: 10000, // 10 second timeout
+  headers: {
+    'Content-Type': 'application/json',
+  },
+})
+
+// Add response interceptor for better error handling
+apiClient.interceptors.response.use(
+  (response: AxiosResponse) => response,
+  (error) => {
+    // Enhanced error handling
+    if (error.response) {
+      // Server responded with error status
+      const message = error.response.data?.message || error.response.statusText || 'Server error'
+      throw new Error(`${error.response.status}: ${message}`)
+    } else if (error.request) {
+      // Request was made but no response received
+      throw new Error('Network error: No response from server')
+    } else {
+      // Something else happened
+      throw new Error(`Request failed: ${error.message}`)
+    }
+  }
+)
 
 export class ContactService {
-  // Get all contacts
+  /**
+   * Get all contacts from the API
+   * @returns Promise<Contact[]> Array of all contacts
+   */
   static async getAllContacts(): Promise<Contact[]> {
-    const response = await fetch(`${API_BASE_URL}/contactagenda`)
-    if (!response.ok) {
-      throw new Error(`Failed to fetch contacts: ${response.statusText}`)
+    try {
+      const response = await apiClient.get<Contact[]>('/contacts')
+      return response.data
+    } catch (error) {
+      console.error('Error fetching all contacts:', error)
+      throw error
     }
-    return response.json()
   }
 
-  // Get contact by ID
+  /**
+   * Get a specific contact by ID
+   * @param id - Contact ID to fetch
+   * @returns Promise<Contact> The requested contact
+   */
   static async getContactById(id: number): Promise<Contact> {
-    const response = await fetch(`${API_BASE_URL}/contactagenda/${id}`)
-    if (!response.ok) {
-      throw new Error(`Failed to fetch contact: ${response.statusText}`)
+    try {
+      const response = await apiClient.get<Contact>(`/contacts/${id}`)
+      return response.data
+    } catch (error) {
+      console.error(`Error fetching contact ${id}:`, error)
+      throw error
     }
-    return response.json()
   }
 
-  // Create new contact
+  /**
+   * Create a new contact
+   * @param contact - Contact data to create
+   * @returns Promise<Contact> The created contact with ID
+   */
   static async createContact(contact: ContactCreateDto): Promise<Contact> {
-    const response = await fetch(`${API_BASE_URL}/contactagenda`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(contact)
-    })
-    if (!response.ok) {
-      throw new Error(`Failed to create contact: ${response.statusText}`)
+    try {
+      const response = await apiClient.post<Contact>('/contacts', contact)
+      return response.data
+    } catch (error) {
+      console.error('Error creating contact:', error)
+      throw error
     }
-    return response.json()
   }
 
-  // Update contact
+  /**
+   * Update an existing contact
+   * @param id - Contact ID to update
+   * @param contact - Updated contact data
+   * @returns Promise<Contact> The updated contact
+   */
   static async updateContact(id: number, contact: ContactCreateDto): Promise<Contact> {
-    const response = await fetch(`${API_BASE_URL}/contactagenda/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ id, ...contact })
-    })
-    if (!response.ok) {
-      throw new Error(`Failed to update contact: ${response.statusText}`)
+    try {
+      const response = await apiClient.put<Contact>(`/contacts/${id}`, { id, ...contact })
+      return response.data
+    } catch (error) {
+      console.error(`Error updating contact ${id}:`, error)
+      throw error
     }
-    return response.json()
   }
 
-  // Delete contact
+  /**
+   * Delete a contact by ID
+   * @param id - Contact ID to delete
+   * @returns Promise<void>
+   */
   static async deleteContact(id: number): Promise<void> {
-    const response = await fetch(`${API_BASE_URL}/contactagenda/${id}`, {
-      method: 'DELETE'
-    })
-    if (!response.ok) {
-      throw new Error(`Failed to delete contact: ${response.statusText}`)
+    try {
+      await apiClient.delete(`/contacts/${id}`)
+    } catch (error) {
+      console.error(`Error deleting contact ${id}:`, error)
+      throw error
     }
   }
 }

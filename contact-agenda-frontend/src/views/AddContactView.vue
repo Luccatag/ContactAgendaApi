@@ -65,6 +65,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { ContactService } from '../services/contactService'
 
 interface FormData {
   name: string
@@ -116,18 +117,8 @@ const handleSubmit = async () => {
   errorMessage.value = ''
   
   try {
-    const response = await fetch('/api/contacts', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData.value)
-    })
-    
-    if (!response.ok) {
-      const errorData = await response.text()
-      throw new Error(errorData || 'Failed to add contact')
-    }
-    
-    const newContact = await response.json()
+    // Create contact using ContactService
+    const newContact = await ContactService.createContact(formData.value)
     successMessage.value = `Contact "${newContact.name}" added successfully!`
     
     // Reset form

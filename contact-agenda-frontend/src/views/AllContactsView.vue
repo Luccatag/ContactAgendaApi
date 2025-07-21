@@ -35,6 +35,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import ContactCard from '../components/ui/ContactCard.vue'
+import { ContactService } from '../services/contactService'
 
 const contacts = ref([])
 const loading = ref(true)
@@ -42,16 +43,18 @@ const error = ref('')
 
 onMounted(fetchContacts)
 
+/**
+ * Fetch all contacts using the ContactService
+ */
 async function fetchContacts() {
   loading.value = true
   error.value = ''
   
   try {
-    const res = await fetch('/api/contacts')
-    if (!res.ok) throw new Error('Failed to fetch contacts')
-    contacts.value = await res.json()
+    contacts.value = await ContactService.getAllContacts()
   } catch (e) {
-    error.value = e.message
+    error.value = e.message || 'Failed to fetch contacts'
+    console.error('Error fetching contacts:', e)
   } finally {
     loading.value = false
   }

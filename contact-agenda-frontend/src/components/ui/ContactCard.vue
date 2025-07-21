@@ -74,6 +74,7 @@
 
 <script setup>
 import { ref, reactive } from 'vue'
+import { ContactService } from '../../services/contactService'
 
 /**
  * Props definition
@@ -148,29 +149,15 @@ const saveEdit = async () => {
   }
   
   try {
-    // Make API call to update the contact
-    const response = await fetch(`/api/contacts/${props.contact.id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        id: props.contact.id,
-        name: editData.name,
-        email: editData.email,
-        phone: editData.phone
-      })
-    })
-    
-    if (!response.ok) {
-      throw new Error('Failed to update contact')
-    }
-    
-    // Emit the updated contact data to parent component
-    emit('updated', {
-      id: props.contact.id,
+    // Make API call to update the contact using ContactService
+    const updatedContact = await ContactService.updateContact(props.contact.id, {
       name: editData.name,
       email: editData.email,
       phone: editData.phone
     })
+    
+    // Emit the updated contact data to parent component
+    emit('updated', updatedContact)
     
     // Exit edit mode
     isEditing.value = false
@@ -190,14 +177,8 @@ const deleteContact = async () => {
   }
   
   try {
-    // Make API call to delete the contact
-    const response = await fetch(`/api/contacts/${props.contact.id}`, {
-      method: 'DELETE'
-    })
-    
-    if (!response.ok) {
-      throw new Error('Failed to delete contact')
-    }
+    // Make API call to delete the contact using ContactService
+    await ContactService.deleteContact(props.contact.id)
     
     // Emit the deleted contact ID to parent component
     emit('deleted', props.contact.id)

@@ -64,6 +64,7 @@
 
 <script setup>
 import { ref, reactive, computed } from 'vue'
+import { ContactService } from '../../services/contactService'
 
 const props = defineProps({
   title: {
@@ -136,18 +137,8 @@ const handleSubmit = async () => {
   errorMessage.value = ''
   
   try {
-    const response = await fetch('/api/contacts', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData)
-    })
-    
-    if (!response.ok) {
-      const errorData = await response.text()
-      throw new Error(errorData || 'Failed to add contact')
-    }
-    
-    const newContact = await response.json()
+    // Create contact using ContactService
+    const newContact = await ContactService.createContact(formData)
     successMessage.value = `Contact "${newContact.name}" added successfully!`
     
     emit('submitted', newContact)
