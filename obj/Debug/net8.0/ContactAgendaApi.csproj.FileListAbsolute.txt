@@ -172,3 +172,8 @@ C:\Users\LuccaAg\ContactAgendaApi\obj\Debug\net8.0\ContactAgendaApi.xml
 C:\Users\LuccaAg\ContactAgendaApi\obj\Debug\net8.0\ContactAgendaApi.pdb
 C:\Users\LuccaAg\ContactAgendaApi\obj\Debug\net8.0\ContactAgendaApi.genruntimeconfig.cache
 C:\Users\LuccaAg\ContactAgendaApi\obj\Debug\net8.0\ref\ContactAgendaApi.dll
+C:\Users\LuccaAg\ContactAgendaApi\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\LuccaAg\ContactAgendaApi\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\LuccaAg\ContactAgendaApi\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\LuccaAg\ContactAgendaApi\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\LuccaAg\ContactAgendaApi\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll

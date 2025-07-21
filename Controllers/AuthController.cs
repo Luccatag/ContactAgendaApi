@@ -21,40 +21,60 @@ namespace ContactAgendaApi.Controllers
         private readonly AppDbContext _context;
         private readonly IConfiguration _config;
 
+        // Inject database context and configuration
         public AuthController(AppDbContext context, IConfiguration config)
         {
             _context = context;
             _config = config;
         }
 
+        /// <summary>
+        /// Registers a new user. Username must be unique. Password is hashed before storing.
+        /// </summary>
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegisterDto dto)
         {
+            // Validate input
+            if (string.IsNullOrWhiteSpace(dto.Username) || string.IsNullOrWhiteSpace(dto.Password))
+                return BadRequest("Username and password are required");
+            // Check for existing user
             if (await _context.Users.AnyAsync(u => u.Username == dto.Username))
                 return BadRequest("Username already exists");
 
+            // Create and save user
             var user = new User
             {
                 Username = dto.Username,
-                PasswordHash = HashPassword(dto.Password)
+                PasswordHash = HashPassword(dto.Password ?? string.Empty)
             };
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
             return Ok();
         }
 
+        /// <summary>
+        /// Authenticates a user and returns a JWT token if successful.
+        /// </summary>
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginDto dto)
         {
+            // Validate input
+            if (string.IsNullOrWhiteSpace(dto.Username) || string.IsNullOrWhiteSpace(dto.Password))
+                return BadRequest("Username and password are required");
+            // Find user
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == dto.Username);
-            if (user == null || !VerifyPassword(dto.Password, user.PasswordHash))
+            // Verify password
+            if (user == null || !VerifyPassword(dto.Password ?? string.Empty, user.PasswordHash ?? string.Empty))
                 return Unauthorized("Invalid credentials");
 
+            // Generate JWT token
             var token = GenerateJwtToken(user);
             return Ok(new { token });
         }
 
-        // Password hashing (SHA256 for demo, use BCrypt/Identity for production)
+        /// <summary>
+        /// Hashes a password using SHA256. (For demo only; use BCrypt/Identity for production)
+        /// </summary>
         private string HashPassword(string password)
         {
             using var sha = SHA256.Create();
@@ -62,19 +82,25 @@ namespace ContactAgendaApi.Controllers
             return Convert.ToBase64String(bytes);
         }
 
+        /// <summary>
+        /// Verifies a password against a hash.
+        /// </summary>
         private bool VerifyPassword(string password, string hash)
         {
             return HashPassword(password) == hash;
         }
 
+        /// <summary>
+        /// Generates a JWT token for the authenticated user.
+        /// </summary>
         private string GenerateJwtToken(User user)
         {
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Username)
+                new Claim(ClaimTypes.Name, user.Username ?? string.Empty)
             };
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"] ?? string.Empty));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var token = new JwtSecurityToken(
                 issuer: _config["Jwt:Issuer"],
@@ -89,12 +115,12 @@ namespace ContactAgendaApi.Controllers
 
     public class UserRegisterDto
     {
-        public string Username { get; set; }
-        public string Password { get; set; }
+        public string? Username { get; set; }
+        public string? Password { get; set; }
     }
     public class UserLoginDto
     {
-        public string Username { get; set; }
-        public string Password { get; set; }
+        public string? Username { get; set; }
+        public string? Password { get; set; }
     }
 }
