@@ -1,41 +1,59 @@
 <template>
   <div class="contact-agenda">
-    <h2>Contact Agenda</h2>
-    <button @click="goToAddContact" style="margin-bottom:1rem">Add New Contact</button>
+    <h2>All Contacts (from JSON)</h2>
+    <button @click="$router.push('/')">Back to Home</button>
     <div v-if="loading" class="loading">Loading contacts...</div>
     <div v-else-if="error" class="error-message">{{ error }}</div>
-    <ContactList
-      v-if="!loading && contacts.length > 0"
-      :contacts="contacts"
-      @edit="handleEdit"
-      @delete="handleDelete"
-    />
-    <p v-else-if="!loading">No contacts found.</p>
-    <!-- Add Contact Modal/Section will go here -->
+    <ul v-else>
+      <li v-for="contact in contacts" :key="contact.id" class="contact-item">
+        <div v-if="editId !== contact.id">
+          <strong>{{ contact.name }}</strong>
+          <div class="contact-details">
+            Email: {{ contact.email }}<br />
+            Phone: {{ contact.phone }}
+          </div>
+          <button @click="startEdit(contact)" style="margin-top:0.5rem">Edit</button>
+        </div>
+        <div v-else>
+          <form @submit.prevent="saveEdit(contact.id)">
+            <div class="form-field">
+              <label>Name</label>
+              <input v-model="editName" type="text" required />
+            </div>
+            <div class="form-field">
+              <label>Email</label>
+              <input v-model="editEmail" type="email" required />
+            </div>
+            <div class="form-field">
+              <label>Phone</label>
+              <input v-model="editPhone" type="tel" required />
+            </div>
+            <button type="submit">Save</button>
+            <button type="button" @click="cancelEdit" style="margin-left:0.5rem">Cancel</button>
+          </form>
+          <div v-if="editError" class="error-message">{{ editError }}</div>
+        </div>
+      </li>
+    </ul>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import ContactList from '../components/ContactList.vue'
 
-// State
 const contacts = ref([])
 const loading = ref(true)
 const error = ref('')
-// No need for showAdd, navigation will be used
-// Navigate to add contact form
-function goToAddContact() {
-  // Assumes you have a route named 'AddContact' or '/add'
-  // Adjust as needed for your router setup
-  // Example: this.$router.push('/add-contact') for options API
-  // For script setup:
-  window.location.href = '/add-contact' // fallback if router not injected
-}
+
+// Edit state
+const editId = ref(null)
+const editName = ref('')
+const editEmail = ref('')
+const editPhone = ref('')
+const editError = ref('')
 
 onMounted(fetchContacts)
 
-// Fetch contacts from backend
 async function fetchContacts() {
   loading.value = true
   try {
@@ -49,35 +67,39 @@ async function fetchContacts() {
   }
 }
 
-// Handle edit event from ContactList
-async function handleEdit(updated) {
+function startEdit(contact) {
+  editId.value = contact.id
+  editName.value = contact.name
+  editEmail.value = contact.email
+  editPhone.value = contact.phone
+  editError.value = ''
+}
+
+function cancelEdit() {
+  editId.value = null
+  editName.value = ''
+  editEmail.value = ''
+  editPhone.value = ''
+  editError.value = ''
+}
+
+async function saveEdit(id) {
+  editError.value = ''
   try {
-    const res = await fetch(`/api/contacts/${updated.id}`, {
+    const res = await fetch(`/api/contacts/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updated)
+      body: JSON.stringify({ id, name: editName.value, email: editEmail.value, phone: editPhone.value })
     })
     if (!res.ok) throw new Error('Failed to update contact')
     // Update local list
-    const idx = contacts.value.findIndex(c => c.id === updated.id)
+    const idx = contacts.value.findIndex(c => c.id === id)
     if (idx !== -1) {
-      contacts.value[idx] = updated
+      contacts.value[idx] = { id, name: editName.value, email: editEmail.value, phone: editPhone.value }
     }
+    cancelEdit()
   } catch (e) {
-    error.value = e.message
-  }
-}
-
-// Handle delete event from ContactList
-async function handleDelete(id) {
-  try {
-    const res = await fetch(`/api/contacts/${id}`, {
-      method: 'DELETE'
-    })
-    if (!res.ok) throw new Error('Failed to delete contact')
-    contacts.value = contacts.value.filter(c => c.id !== id)
-  } catch (e) {
-    error.value = e.message
+    editError.value = e.message
   }
 }
 </script>
