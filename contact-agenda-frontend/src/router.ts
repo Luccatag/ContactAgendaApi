@@ -5,8 +5,8 @@ import AllContactsView from './views/AllContactsView.vue'
 import AddContactView from './views/AddContactView.vue'
 
 const routes = [
-  { path: '/', component: ContactAgendaView },
-  { path: '/all-contacts', component: AllContactsView },
+  { path: '/', component: AllContactsView },
+  { path: '/contact-agenda', component: ContactAgendaView },
   { path: '/add-contact', component: AddContactView }
 ]
 

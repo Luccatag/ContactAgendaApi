@@ -3,9 +3,9 @@
     <div class="container">
       <h1 class="logo">Contact Agenda</h1>
       <nav class="navigation">
-        <router-link to="/" class="nav-link">Home</router-link>
-        <router-link to="/all-contacts" class="nav-link">All Contacts</router-link>
+        <router-link to="/" class="nav-link">All Contacts</router-link>
         <router-link to="/add-contact" class="nav-link">Add Contact</router-link>
+        <router-link to="/contact-agenda" class="nav-link">Original View</router-link>
       </nav>
     </div>
   </header>
@@ -21,15 +21,18 @@
   color: white;
   padding: 1rem 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
 }
 
 .container {
-  max-width: 1200px;
+  width: 100%;
+  max-width: 100%;
   margin: 0 auto;
   padding: 0 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-sizing: border-box;
 }
 
 .logo {

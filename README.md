@@ -41,12 +41,22 @@ The project itself is simple, but you are encouraged to enhance it to best showc
 - FluentValidation integrated and enforced in controller actions
 - Dapper integration implemented and testable via dedicated controller
 - Code organized and follows clean architecture principles
+- **Frontend refactored to use component-based structure**
+  - Created modular components: AppHeader, ContactCard, ContactForm
+  - Organized components into layout/ and ui/ folders
+  - Implemented reusable ContactCard with inline editing and validation
+  - Added comprehensive code comments and documentation
+  - Responsive design for mobile and desktop
+- **Email and phone validation implemented**
+  - Client-side validation with regex patterns
+  - Server-side validation before API calls
+  - User-friendly error messages and real-time validation
 
 ## 🚧 Next Steps
 1. **Add unit/integration tests for backend**
    - Create a test project and add tests for Service, Repository (including JSON persistence), and Dapper endpoints.
-2. **Refactor frontend to use component-based structure**
-   - Modularize UI and views for maintainability.
+2. ~~**Refactor frontend to use component-based structure**~~ ✅ **COMPLETED**
+   - ~~Modularize UI and views for maintainability.~~
 3. **Use axios for all API calls in frontend**
    - Replace fetch with axios in Vue components for consistency and better error handling.
 4. **Implement Pinia for state management (optional)**
@@ -57,18 +67,18 @@ The project itself is simple, but you are encouraged to enhance it to best showc
    - Add advanced features as needed to demonstrate differentials.
 
 ## 📋 Full Requirements Reference
-- .NET 6+ backend with clean architecture (Repositories, Services, Controllers, Interfaces, Dependency Injection)
-- Entity Framework Core for data access
-- AutoMapper for mapping between models and DTOs
-- FluentValidation for input validation
-- Swashbuckle/Swagger for API documentation
-- Dapper integration (sample query)
-- Unit/integration tests for backend
-- Vue 3 frontend with Vite
-- PrimeVue for UI components
-- axios for API calls
-- vue-router for navigation
-- pinia for state management (optional)
-- Component-based frontend structure
-- Frontend test coverage
-- Bonus: CQRS, authentication/security, RabbitMQ, Dockerfile
+- .NET 6+ backend with clean architecture (Repositories, Services, Controllers, Interfaces, Dependency Injection) ✅
+- Entity Framework Core for data access ✅
+- AutoMapper for mapping between models and DTOs ✅
+- FluentValidation for input validation ✅
+- Swashbuckle/Swagger for API documentation ✅
+- Dapper integration (sample query) ✅
+- Unit/integration tests for backend ❌
+- Vue 3 frontend with Vite ✅
+- PrimeVue for UI components ✅
+- axios for API calls ❌ (currently using fetch)
+- vue-router for navigation ✅
+- pinia for state management (optional) ✅ (configured but not actively used)
+- Component-based frontend structure ✅
+- Frontend test coverage ❌
+- Bonus: CQRS, authentication/security, RabbitMQ, Dockerfile ❌

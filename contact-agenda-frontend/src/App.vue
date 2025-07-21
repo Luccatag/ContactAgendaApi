@@ -26,19 +26,23 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #f7fafc;
+  overflow-x: hidden;
 }
 
 #app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 100%;
 }
 
 .main-content {
   flex: 1;
-  padding: 2rem 1rem;
-  max-width: 1200px;
-  margin: 0 auto;
   width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 </style>

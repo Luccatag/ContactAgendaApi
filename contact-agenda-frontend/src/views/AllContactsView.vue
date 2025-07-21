@@ -1,7 +1,7 @@
 <template>
   <div class="all-contacts-view">
     <div class="page-header">
-      <h1 class="page-title">All Contacts</h1>
+      <h1 class="page-title">Contact Agenda</h1>
       <p class="page-subtitle">Manage your contact list</p>
     </div>
     
@@ -71,8 +71,11 @@ function handleContactDeleted(deletedId) {
 
 <style scoped>
 .all-contacts-view {
-  max-width: 1200px;
+  width: 100%;
+  max-width: 100%;
   margin: 0 auto;
+  padding: 2rem 1rem;
+  box-sizing: border-box;
 }
 
 .page-header {
@@ -126,8 +129,10 @@ function handleContactDeleted(deletedId) {
 
 .contacts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
+  width: 100%;
+  max-width: 100%;
 }
 
 .btn {
@@ -148,9 +153,34 @@ function handleContactDeleted(deletedId) {
   background: #5a67d8;
 }
 
+/* Responsive adjustments for smaller screens */
 @media (max-width: 768px) {
   .contacts-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+  
+  .all-contacts-view {
+    padding: 1rem 0.5rem;
+  }
+  
+  .page-title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .contacts-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .all-contacts-view {
+    padding: 0.5rem;
+  }
+  
+  .page-title {
+    font-size: 1.25rem;
   }
 }
 </style>
