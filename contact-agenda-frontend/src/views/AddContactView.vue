@@ -48,7 +48,7 @@
         <button type="submit" class="btn btn-primary" :disabled="loading">
           {{ loading ? 'Adding...' : 'Add Contact' }}
         </button>
-        <router-link to="/" class="btn btn-secondary">Cancel</router-link>
+        <router-link to="/contacts" class="btn btn-secondary">Cancel</router-link>
       </div>
     </form>
     
@@ -133,7 +133,7 @@ const handleSubmit = async () => {
     // Reset form
     formData.value = { name: '', email: '', phone: '' }
     
-    // Redirect after 2 seconds
+    // Redirect after 2 seconds to home page (favorites view)
     setTimeout(() => {
       router.push('/')
     }, 2000)

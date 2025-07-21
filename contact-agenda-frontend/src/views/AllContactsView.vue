@@ -31,7 +31,7 @@
     <div v-else-if="filteredContacts.length === 0 && contactStore.contactCount === 0" class="empty-state">
       <h3>No contacts found</h3>
       <p>Start by adding your first contact.</p>
-      <router-link to="/add-contact" class="btn btn-primary">Add Contact</router-link>
+      <router-link to="/add" class="btn btn-primary">Add Contact</router-link>
     </div>
     
     <!-- No search results -->

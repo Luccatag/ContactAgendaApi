@@ -3,9 +3,10 @@
     <div class="container">
       <h1 class="logo">Contact Agenda</h1>
       <nav class="navigation">
-        <router-link to="/" class="nav-link">All Contacts</router-link>
-        <router-link to="/add-contact" class="nav-link">Add Contact</router-link>
-        <router-link to="/contact-agenda" class="nav-link">Original View</router-link>
+        <router-link to="/" class="nav-link">⭐ Home</router-link>
+        <router-link to="/contacts" class="nav-link">📋 All Contacts</router-link>
+        <router-link to="/add" class="nav-link">➕ Add Contact</router-link>
+        <router-link to="/contact-agenda" class="nav-link">🔧 Demo</router-link>
       </nav>
     </div>
   </header>

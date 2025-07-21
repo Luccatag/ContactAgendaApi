@@ -81,6 +81,14 @@ The project itself is simple, but you are encouraged to enhance it to best showc
   - Duplicate email detection before contact creation
   - Automatic error handling and recovery mechanisms
 
+- **Favorite contacts functionality implemented**
+  - Added IsFavorite field to Contact model and database schema
+  - Heart button (❤️/🤍) for each contact card to toggle favorite status
+  - Favorites automatically displayed at top of contact list
+  - Smooth animations and visual feedback for favorite interactions
+  - Favorite status preserved in both edit forms and new contact creation
+  - Backend API endpoint `/api/contacts/{id}/favorite` for toggle operations
+
 ## 🚧 Next Steps
 1. **Add unit/integration tests for backend**
    - Create a test project and add tests for Service, Repository (including JSON persistence), and Dapper endpoints.
@@ -115,6 +123,12 @@ The project itself is simple, but you are encouraged to enhance it to best showc
 ## 🔧 Technical Notes
 ### API Endpoints
 - **`/api/contacts`**: Main CRUD endpoints using JSON file persistence (`contacts.json`) - temporary database substitute
+  - `GET /api/contacts` - Retrieve all contacts
+  - `GET /api/contacts/{id}` - Retrieve specific contact
+  - `POST /api/contacts` - Create new contact
+  - `PUT /api/contacts/{id}` - Update existing contact
+  - `DELETE /api/contacts/{id}` - Delete contact
+  - `PATCH /api/contacts/{id}/favorite` - Toggle favorite status
 - **`/api/contactagenda`**: Demo endpoints using in-memory storage
 - **`/api/dappercontacts`**: Sample Dapper integration endpoint
 
@@ -122,6 +136,7 @@ The project itself is simple, but you are encouraged to enhance it to best showc
 - **Current**: JSON file (`contacts.json`) serves as temporary database for development/demonstration
 - **Production Ready**: EF Core with SQLite database configured and available
 - **Repository Pattern**: Allows easy switching between storage implementations
+- **Schema**: Contact model includes Id, Name, Email, Phone, and IsFavorite fields
 
 ### Frontend Architecture
 - **Component Structure**: Organized into `layout/` and `ui/` folders
@@ -130,6 +145,7 @@ The project itself is simple, but you are encouraged to enhance it to best showc
 - **Responsive Design**: CSS Grid with automatic column adjustment based on screen width
 - **Validation**: Client-side regex validation with server-side FluentValidation backup
 - **Search Functionality**: Real-time contact filtering across name, email, and phone fields
+- **Favorite System**: Interactive heart buttons with visual feedback and automatic list sorting
 
 ## 🔄 How to Switch from JSON to SQLite Database
 
@@ -177,3 +193,35 @@ If you want to transfer existing JSON data to SQLite:
 
 ### **Switching Back to JSON:**
 Simply reverse Step 1 to return to JSON file persistence for development/testing purposes.
+
+## ⭐ Favorite Contacts Feature
+
+The application includes a comprehensive favorite contacts system that allows users to mark important contacts and access them quickly.
+
+### **How It Works:**
+- **Heart Button**: Each contact card displays a heart button (🤍 for non-favorites, ❤️ for favorites)
+- **Toggle Functionality**: Click the heart to instantly toggle favorite status with visual feedback
+- **Smart Sorting**: Favorite contacts automatically appear at the top of the list
+- **Persistent State**: Favorite status is saved and maintained across sessions
+- **Form Integration**: New contacts can be marked as favorites during creation
+- **Edit Support**: Favorite status can be changed when editing existing contacts
+
+### **Technical Implementation:**
+- **Backend**: New `IsFavorite` boolean field added to Contact model and database
+- **API Endpoint**: `PATCH /api/contacts/{id}/favorite` for toggling favorite status
+- **Frontend**: Pinia store handles optimistic updates with automatic error recovery
+- **UI/UX**: Smooth animations and immediate visual feedback for user interactions
+- **Data Migration**: Existing contacts automatically receive `IsFavorite: false` as default
+
+### **Database Schema Update:**
+```sql
+-- Migration: AddIsFavoriteToContact
+ALTER TABLE Contacts ADD COLUMN IsFavorite BOOLEAN NOT NULL DEFAULT 0;
+```
+
+### **User Experience:**
+1. **Visual Distinction**: Favorite contacts show filled heart (❤️) and appear at top of list
+2. **Quick Access**: Most important contacts are always visible first
+3. **Intuitive Interface**: Familiar heart icon pattern for favoriting
+4. **Instant Feedback**: Optimistic updates make the interface feel responsive
+5. **Error Handling**: If toggle fails, UI automatically reverts with error message
