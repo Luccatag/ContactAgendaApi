@@ -1,28 +1,44 @@
 
 <template>
-  <nav style="margin-bottom: 1rem;">
-    <router-link to="/">Contact Agenda</router-link>
-    <button @click="$router.push('/all-contacts')" style="margin-left: 1rem;">View All Contacts (JSON)</button>
-    <button @click="$router.push('/add-contact')" style="margin-left: 1rem;">Add New Contact</button>
-  </nav>
-  <router-view />
+  <div id="app">
+    <AppHeader />
+    <main class="main-content">
+      <router-view />
+    </main>
+  </div>
 </template>
 
 <script setup lang="ts">
-// No need for showAgenda or direct import, router handles views
+import AppHeader from './components/layout/AppHeader.vue'
 </script>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f7fafc;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
 }
 </style>

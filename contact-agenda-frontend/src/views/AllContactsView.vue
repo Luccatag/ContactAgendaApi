@@ -1,73 +1,51 @@
 <template>
-  <div class="contact-agenda">
-    <h2>All Contacts (from JSON)</h2>
-    <button @click="$router.push('/')">Back to Home</button>
-    <div v-if="loading" class="loading">Loading contacts...</div>
-    <div v-else-if="error" class="error-message">{{ error }}</div>
-    <ul v-else>
-      <li v-for="contact in contacts" :key="contact.id" class="contact-item">
-        <div v-if="editId !== contact.id">
-          <strong>{{ contact.name }}</strong>
-          <div class="contact-details">
-            Email: {{ contact.email }}<br />
-            Phone: {{ contact.phone }}
-          </div>
-          <button @click="startEdit(contact)" style="margin-top:0.5rem">Edit</button>
-        </div>
-        <div v-else>
-          <form @submit.prevent="saveEdit(contact.id)">
-            <div class="form-field">
-              <label>Name</label>
-              <input v-model="editName" type="text" required />
-            </div>
-            <div class="form-field">
-              <label>Email</label>
-              <input 
-                v-model="editEmail" 
-                type="email" 
-                pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
-                title="Please enter a valid email address (something@something.something)"
-                required 
-              />
-            </div>
-            <div class="form-field">
-              <label>Phone</label>
-              <input 
-                v-model="editPhone" 
-                type="tel" 
-                pattern="[\+]?[0-9\s\-\(\)]{10,}"
-                title="Please enter a valid phone number (at least 10 digits)"
-                required 
-              />
-            </div>
-            <button type="submit">Save</button>
-            <button type="button" @click="cancelEdit" style="margin-left:0.5rem">Cancel</button>
-          </form>
-          <div v-if="editError" class="error-message">{{ editError }}</div>
-        </div>
-      </li>
-    </ul>
+  <div class="all-contacts-view">
+    <div class="page-header">
+      <h1 class="page-title">All Contacts</h1>
+      <p class="page-subtitle">Manage your contact list</p>
+    </div>
+    
+    <div v-if="loading" class="loading">
+      <p>Loading contacts...</p>
+    </div>
+    
+    <div v-else-if="error" class="error-message">
+      <p>{{ error }}</p>
+      <button @click="fetchContacts" class="btn btn-primary">Try Again</button>
+    </div>
+    
+    <div v-else-if="contacts.length === 0" class="empty-state">
+      <h3>No contacts found</h3>
+      <p>Start by adding your first contact.</p>
+      <router-link to="/add-contact" class="btn btn-primary">Add Contact</router-link>
+    </div>
+    
+    <div v-else class="contacts-grid">
+      <ContactCard 
+        v-for="contact in contacts" 
+        :key="contact.id" 
+        :contact="contact"
+        @updated="handleContactUpdated"
+        @deleted="handleContactDeleted"
+      />
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import ContactCard from '../components/ui/ContactCard.vue'
 
 const contacts = ref([])
 const loading = ref(true)
 const error = ref('')
 
-// Edit state
-const editId = ref(null)
-const editName = ref('')
-const editEmail = ref('')
-const editPhone = ref('')
-const editError = ref('')
-
 onMounted(fetchContacts)
 
 async function fetchContacts() {
   loading.value = true
+  error.value = ''
+  
   try {
     const res = await fetch('/api/contacts')
     if (!res.ok) throw new Error('Failed to fetch contacts')
@@ -79,65 +57,100 @@ async function fetchContacts() {
   }
 }
 
-function startEdit(contact) {
-  editId.value = contact.id
-  editName.value = contact.name
-  editEmail.value = contact.email
-  editPhone.value = contact.phone
-  editError.value = ''
+function handleContactUpdated(updatedContact) {
+  const index = contacts.value.findIndex(c => c.id === updatedContact.id)
+  if (index !== -1) {
+    contacts.value[index] = updatedContact
+  }
 }
 
-function cancelEdit() {
-  editId.value = null
-  editName.value = ''
-  editEmail.value = ''
-  editPhone.value = ''
-  editError.value = ''
-}
-
-async function saveEdit(id) {
-  editError.value = ''
-  
-  // Validate email format
-  const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
-  if (!emailRegex.test(editEmail.value)) {
-    editError.value = 'Please enter a valid email address (something@something.something)'
-    return
-  }
-  
-  // Validate phone format
-  const phoneRegex = /^[\+]?[0-9\s\-\(\)]{10,}$/
-  if (!phoneRegex.test(editPhone.value)) {
-    editError.value = 'Please enter a valid phone number (at least 10 digits)'
-    return
-  }
-  
-  try {
-    const res = await fetch(`/api/contacts/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id, name: editName.value, email: editEmail.value, phone: editPhone.value })
-    })
-    if (!res.ok) throw new Error('Failed to update contact')
-    // Update local list
-    const idx = contacts.value.findIndex(c => c.id === id)
-    if (idx !== -1) {
-      contacts.value[idx] = { id, name: editName.value, email: editEmail.value, phone: editPhone.value }
-    }
-    cancelEdit()
-  } catch (e) {
-    editError.value = e.message
-  }
+function handleContactDeleted(deletedId) {
+  contacts.value = contacts.value.filter(c => c.id !== deletedId)
 }
 </script>
 
 <style scoped>
-.contact-agenda {
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 2rem;
+.all-contacts-view {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.page-title {
+  color: #2d3748;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.page-subtitle {
+  color: #718096;
+  font-size: 1.125rem;
+}
+
+.loading, .error-message, .empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.loading p {
+  font-size: 1.125rem;
+  color: #718096;
+}
+
+.error-message {
+  background: #fed7d7;
+  color: #e53e3e;
+  border-radius: 8px;
+  border: 1px solid #feb2b2;
+}
+
+.empty-state {
   background: white;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+}
+
+.empty-state h3 {
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+  color: #718096;
+  margin-bottom: 1.5rem;
+}
+
+.contacts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: #667eea;
+  color: white;
+  text-decoration: none;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background: #5a67d8;
+}
+
+@media (max-width: 768px) {
+  .contacts-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
