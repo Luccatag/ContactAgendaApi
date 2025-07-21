@@ -11,5 +11,6 @@ namespace ContactAgendaApi.Interfaces
         Task<Contact> CreateAsync(Contact contact);
         Task<Contact?> UpdateAsync(Contact updatedContact);
         Task<bool> DeleteAsync(int id);
+        Task<Contact?> ToggleFavoriteAsync(int id);
     }
 }

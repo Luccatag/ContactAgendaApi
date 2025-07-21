@@ -16,15 +16,13 @@ namespace ContactAgendaApi.Tests.IntegrationTests;
 /// 
 /// These tests verify that the entire API stack works correctly together:
 /// - HTTP request/response handling
-/// - Database persistence (using in-memory database)
+/// - Database persistence (using test SQLite database)
 /// - JSON serialization/deserialization
 /// - Error handling and status codes
 /// - Complete CRUD workflows
 /// 
 /// Uses WebApplicationFactory to create a test server that hosts the actual API.
-/// Uses in-memory database to avoid dependencies on external systems.
-/// 
-/// Note: Currently failing due to database provider conflicts that need resolution.
+/// Uses isolated SQLite database for each test run to ensure test isolation.
 /// </summary>
 public class ContactsApiIntegrationTests : IClassFixture<WebApplicationFactory<Program>>
 {
@@ -32,10 +30,11 @@ public class ContactsApiIntegrationTests : IClassFixture<WebApplicationFactory<P
     private readonly HttpClient _client;
 
     /// <summary>
-    /// Test setup - Creates a test server with in-memory database and HTTP client.
+    /// Test setup - Creates a test server with test SQLite database and HTTP client.
     /// 
     /// The WebApplicationFactory creates a real ASP.NET Core server for testing,
-    /// but replaces the database with an in-memory version for isolation.
+    /// but replaces the database connection string to use a test-specific SQLite database.
+    /// Each test run gets a fresh database to ensure test isolation.
     /// </summary>
     public ContactsApiIntegrationTests(WebApplicationFactory<Program> factory)
     {
@@ -52,10 +51,11 @@ public class ContactsApiIntegrationTests : IClassFixture<WebApplicationFactory<P
                     services.Remove(descriptor);
                 }
 
-                // Add in-memory database for testing
+                // Add test SQLite database for testing with unique name per test run
+                var testDbName = $"test_contacts_{DateTime.Now.Ticks}.db";
                 services.AddDbContext<AppDbContext>(options =>
                 {
-                    options.UseInMemoryDatabase("TestDb");
+                    options.UseSqlite($"Data Source={testDbName}");
                 });
 
                 // Build the service provider and create the database
@@ -70,6 +70,7 @@ public class ContactsApiIntegrationTests : IClassFixture<WebApplicationFactory<P
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task GetAllContacts_ShouldReturnEmptyListInitially()
     {
         // Act

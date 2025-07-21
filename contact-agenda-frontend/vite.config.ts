@@ -7,5 +7,9 @@ export default defineConfig({
     proxy: {
       '/api': 'http://localhost:5290'
     }
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom'
   }
 })

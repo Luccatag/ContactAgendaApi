@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using ContactAgendaApi.Repositories;
 using ContactAgendaApi.Interfaces; // Add this at the top
 using ContactAgendaApi.Services; // at the top if not present
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using ContactAgendaApi.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,12 +42,16 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=contacts.db"));
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+// Add FluentValidation services
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddFluentValidationClientsideAdapters();
+builder.Services.AddValidatorsFromAssemblyContaining<ContactCreateDtoValidator>();
+
 // Register DapperContactRepository for DI
 builder.Services.AddScoped<DapperContactRepository>();
-// Register JsonContactRepository for DI (all contact CRUD will use contacts.json)
-builder.Services.AddSingleton<IContactRepository>(provider =>
-    new JsonContactRepository("contacts.json")
-);
+// Register ContactRepository for DI (all contact CRUD will use SQLite database)
+builder.Services.AddScoped<IContactRepository, ContactRepository>();
 builder.Services.AddScoped<IContactService, ContactService>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

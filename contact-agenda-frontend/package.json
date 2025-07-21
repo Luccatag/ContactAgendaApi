@@ -16,10 +16,17 @@
     "vue": "^3.5.17"
   },
   "devDependencies": {
+    "@types/jsdom": "^21.1.7",
+    "@types/node": "^24.0.15",
     "@vitejs/plugin-vue": "^6.0.0",
+    "@vitest/ui": "^3.2.4",
+    "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.7.0",
+    "happy-dom": "^18.0.1",
+    "jsdom": "^26.1.0",
     "typescript": "~5.8.3",
     "vite": "^7.0.4",
+    "vitest": "^3.2.4",
     "vue-tsc": "^2.2.12"
   }
 }

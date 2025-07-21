@@ -71,5 +71,17 @@ namespace ContactAgendaApi.Repositories
             await WriteContactsAsync(contacts);
             return true;
         }
+
+        public async Task<Contact?> ToggleFavoriteAsync(int id)
+        {
+            var contacts = await ReadContactsAsync();
+            var contact = contacts.FirstOrDefault(c => c.Id == id);
+            if (contact == null)
+                return null;
+            
+            contact.IsFavorite = !contact.IsFavorite;
+            await WriteContactsAsync(contacts);
+            return contact;
+        }
     }
 }
