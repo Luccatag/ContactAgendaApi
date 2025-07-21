@@ -1,62 +1,246 @@
 <template>
-  <div class="contact-agenda">
-    <h2>Add New Contact</h2>
-    <form @submit.prevent="addContact">
-      <div class="form-field">
-        <label>Name</label>
-        <input v-model="name" type="text" required />
+  <div class="add-contact-view">
+    <h1>Add New Contact</h1>
+    
+    <form @submit.prevent="handleSubmit" class="contact-form">
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input 
+          id="name"
+          v-model="formData.name" 
+          type="text" 
+          required 
+          placeholder="Enter contact name"
+        />
       </div>
-      <div class="form-field">
-        <label>Email</label>
-        <input v-model="email" type="email" required />
+      
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input 
+          id="email"
+          v-model="formData.email" 
+          type="email" 
+          required 
+          pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
+          title="Please enter a valid email address (something@something.something)"
+          placeholder="Enter email address"
+          @input="validateEmail"
+        />
+        <div v-if="emailError" class="validation-error">{{ emailError }}</div>
       </div>
-      <div class="form-field">
-        <label>Phone</label>
-        <input v-model="phone" type="tel" required />
+      
+      <div class="form-group">
+        <label for="phone">Phone:</label>
+        <input 
+          id="phone"
+          v-model="formData.phone" 
+          type="tel" 
+          required 
+          pattern="[\+]?[0-9\s\-\(\)]{10,}"
+          title="Please enter a valid phone number (at least 10 digits)"
+          placeholder="Enter phone number"
+          @input="validatePhone"
+        />
+        <div v-if="phoneError" class="validation-error">{{ phoneError }}</div>
       </div>
-      <button type="submit">Add Contact</button>
+      
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" :disabled="loading">
+          {{ loading ? 'Adding...' : 'Add Contact' }}
+        </button>
+        <router-link to="/" class="btn btn-secondary">Cancel</router-link>
+      </div>
     </form>
-    <div v-if="success" class="success-message">Contact added!</div>
-    <div v-if="error" class="error-message">{{ error }}</div>
-    <button @click="$router.push('/')" style="margin-top:1rem">Back to Home</button>
+    
+    <div v-if="successMessage" class="success-message">
+      {{ successMessage }}
+    </div>
+    
+    <div v-if="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
-const name = ref('')
-const email = ref('')
-const phone = ref('')
-const success = ref(false)
-const error = ref('')
+import { useRouter } from 'vue-router'
 
-async function addContact() {
-  success.value = false
-  error.value = ''
+interface FormData {
+  name: string
+  email: string
+  phone: string
+}
+
+const router = useRouter()
+const loading = ref(false)
+const successMessage = ref('')
+const errorMessage = ref('')
+const emailError = ref('')
+const phoneError = ref('')
+
+const formData = ref<FormData>({
+  name: '',
+  email: '',
+  phone: ''
+})
+
+const validateEmail = () => {
+  const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
+  if (formData.value.email && !emailRegex.test(formData.value.email)) {
+    emailError.value = 'Please enter a valid email address (something@something.something)'
+  } else {
+    emailError.value = ''
+  }
+}
+
+const validatePhone = () => {
+  const phoneRegex = /^[\+]?[0-9\s\-\(\)]{10,}$/
+  if (formData.value.phone && !phoneRegex.test(formData.value.phone)) {
+    phoneError.value = 'Please enter a valid phone number (at least 10 digits)'
+  } else {
+    phoneError.value = ''
+  }
+}
+
+const handleSubmit = async () => {
+  // Validate email and phone before submitting
+  validateEmail()
+  validatePhone()
+  if (emailError.value || phoneError.value) {
+    return
+  }
+  
+  loading.value = true
+  successMessage.value = ''
+  errorMessage.value = ''
+  
   try {
-    const res = await fetch('/api/contacts', {
+    const response = await fetch('/api/contacts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: name.value, email: email.value, phone: phone.value })
+      body: JSON.stringify(formData.value)
     })
-    if (!res.ok) throw new Error('Failed to add contact')
-    name.value = ''
-    email.value = ''
-    phone.value = ''
-    success.value = true
-  } catch (e) {
-    error.value = e.message
+    
+    if (!response.ok) {
+      const errorData = await response.text()
+      throw new Error(errorData || 'Failed to add contact')
+    }
+    
+    const newContact = await response.json()
+    successMessage.value = `Contact "${newContact.name}" added successfully!`
+    
+    // Reset form
+    formData.value = { name: '', email: '', phone: '' }
+    
+    // Redirect after 2 seconds
+    setTimeout(() => {
+      router.push('/')
+    }, 2000)
+    
+  } catch (error) {
+    errorMessage.value = error instanceof Error ? error.message : 'Failed to add contact'
+    console.error('Error adding contact:', error)
+  } finally {
+    loading.value = false
   }
 }
 </script>
 
 <style scoped>
-.contact-agenda {
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 2rem;
+.add-contact-view {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.contact-form {
   background: white;
+  padding: 30px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #333;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.btn {
+  padding: 12px 24px;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-primary {
+  background: #007bff;
+  color: white;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.success-message {
+  color: green;
+  padding: 10px;
+  background: #e6ffe6;
+  border-radius: 4px;
+  margin-top: 20px;
+}
+
+.error-message {
+  color: red;
+  padding: 10px;
+  background: #ffe6e6;
+  border-radius: 4px;
+  margin-top: 20px;
+}
+
+.validation-error {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
 }
 </style>

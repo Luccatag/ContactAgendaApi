@@ -22,11 +22,23 @@
             </div>
             <div class="form-field">
               <label>Email</label>
-              <input v-model="editEmail" type="email" required />
+              <input 
+                v-model="editEmail" 
+                type="email" 
+                pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
+                title="Please enter a valid email address (something@something.something)"
+                required 
+              />
             </div>
             <div class="form-field">
               <label>Phone</label>
-              <input v-model="editPhone" type="tel" required />
+              <input 
+                v-model="editPhone" 
+                type="tel" 
+                pattern="[\+]?[0-9\s\-\(\)]{10,}"
+                title="Please enter a valid phone number (at least 10 digits)"
+                required 
+              />
             </div>
             <button type="submit">Save</button>
             <button type="button" @click="cancelEdit" style="margin-left:0.5rem">Cancel</button>
@@ -85,6 +97,21 @@ function cancelEdit() {
 
 async function saveEdit(id) {
   editError.value = ''
+  
+  // Validate email format
+  const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
+  if (!emailRegex.test(editEmail.value)) {
+    editError.value = 'Please enter a valid email address (something@something.something)'
+    return
+  }
+  
+  // Validate phone format
+  const phoneRegex = /^[\+]?[0-9\s\-\(\)]{10,}$/
+  if (!phoneRegex.test(editPhone.value)) {
+    editError.value = 'Please enter a valid phone number (at least 10 digits)'
+    return
+  }
+  
   try {
     const res = await fetch(`/api/contacts/${id}`, {
       method: 'PUT',
