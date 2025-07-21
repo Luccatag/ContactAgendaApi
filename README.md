@@ -32,28 +32,46 @@ The project itself is simple, but you are encouraged to enhance it to best showc
 - Contact model scaffolded (Name, Email, Phone)
 - API routes (CRUD) planned and implemented
 - EntityFramework, AutoMapper, FluentValidation, Swashbuckle/Swagger configured
-- PrimeVue, axios, vue-router, pinia configured in frontend
-- Basic Vue view for adding/listing contacts created
-- Frontend CRUD (add, edit, view) implemented and connected to backend (JSON persistence)
+- PrimeVue, axios, vue-router, pinia installed in frontend
+- Frontend refactored to use modular, reusable components (ContactList, ContactItem, ContactForm)
+- Responsive grid layout for contacts implemented
+- Frontend CRUD (add, edit, view, delete) fully integrated and connected to backend (JSON persistence)
 - Navigation between pages using vue-router
 - Backend CRUD supports both real database (EF Core) and JSON file persistence (via repository pattern)
 - Swagger UI tested and working for all CRUD endpoints
 - FluentValidation integrated and enforced in controller actions
 - Dapper integration implemented and testable via dedicated controller
+- Backend and frontend services (CRUD, validation, mapping, navigation) are working and tested
 - Code organized and follows clean architecture principles
 
 ## 🚧 Next Steps
 1. **Add unit/integration tests for backend**
    - Create a test project and add tests for Service, Repository (including JSON persistence), and Dapper endpoints.
 2. **Refactor frontend to use component-based structure**
-   - Modularize UI and views for maintainability.
-3. **Use axios for all API calls in frontend**
+   - Modularize UI and views for maintainability and scalability.
+   - Recommended additional components:
+     - AppHeader (navigation bar)
+     - AppFooter (footer)
+     - Login/Register forms (authentication)
+     - Notification/Alert (success/error messages)
+     - Modal/Dialog (confirmation dialogs)
+     - Loader/Spinner (loading states)
+     - Pagination (for large contact lists)
+     - UserProfile (user info)
+     - Layout (main wrapper for consistent page structure)
+3. **Switch all frontend API calls to axios**
    - Replace fetch with axios in Vue components for consistency and better error handling.
 4. **Implement Pinia for state management (optional)**
    - Use Pinia to manage contacts state in frontend.
 5. **Add frontend test coverage**
    - Add unit and integration tests for Vue components.
-6. **Bonus: Implement CQRS, authentication/security, RabbitMQ, Dockerfile**
+6. **Implement secure login and user-specific encrypted contacts**
+   - Add user registration and login endpoints (JWT or ASP.NET Core Identity)
+   - Store passwords securely (hashed and salted)
+   - Add UserId to Contact model and scope all CRUD to authenticated user
+   - Encrypt contact data before storing in the database (AES or similar)
+   - Add login/register pages to frontend and send JWT with API requests
+7. **Bonus: Implement CQRS, RabbitMQ, Dockerfile**
    - Add advanced features as needed to demonstrate differentials.
 
 ## 📋 Full Requirements Reference

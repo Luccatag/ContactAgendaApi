@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import ContactAgendaView from './views/ContactAgendaView.vue'
+// Removed unused ContactAgendaView import
 import AllContactsView from './views/AllContactsView.vue'
 import AddContactView from './views/AddContactView.vue'
 
 const routes = [
-  { path: '/', component: ContactAgendaView },
-  { path: '/all-contacts', component: AllContactsView },
+  { path: '/home', component: AllContactsView },
+  { path: '/', redirect: '/home' },
   { path: '/add-contact', component: AddContactView }
 ]
 

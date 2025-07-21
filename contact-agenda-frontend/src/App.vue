@@ -1,15 +1,14 @@
 
 <template>
-  <nav style="margin-bottom: 1rem;">
-    <router-link to="/">Contact Agenda</router-link>
-    <button @click="$router.push('/all-contacts')" style="margin-left: 1rem;">View All Contacts (JSON)</button>
-    <button @click="$router.push('/add-contact')" style="margin-left: 1rem;">Add New Contact</button>
-  </nav>
+  <!-- AppHeader: global navigation bar for all pages -->
+  <AppHeader />
+  <!-- Main content rendered by router -->
   <router-view />
 </template>
 
 <script setup lang="ts">
-// No need for showAgenda or direct import, router handles views
+// Import AppHeader for global navigation
+import AppHeader from './components/AppHeader.vue'
 </script>
 
 <style scoped>
