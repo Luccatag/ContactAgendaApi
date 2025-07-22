@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  # Backend API Service (without tests)
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api-only
+    container_name: contact-agenda-api
+    ports:
+      - "8081:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5000
+    volumes:
+      - ./contacts.db:/app/contacts.db
+    networks:
+      - contact-agenda-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health || true"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Frontend Service
+  frontend:
+    build:
+      context: ./contact-agenda-frontend
+      dockerfile: Dockerfile
+    container_name: contact-agenda-frontend
+    ports:
+      - "3000:8080"
+    depends_on:
+      - api
+    networks:
+      - contact-agenda-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health || true"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+networks:
+  contact-agenda-network:
+    driver: bridge
+
+volumes:
+  contact_data:
+    driver: local

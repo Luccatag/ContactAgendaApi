@@ -1,0 +1,95 @@
+version: '3.8'
+
+services:
+  # MySQL Database Service
+  database:
+    image: mysql:8.0
+    container_name: contact-agenda-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: contactagenda
+      MYSQL_USER: contactuser
+      MYSQL_PASSWORD: contact123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/mysql-init:/docker-entrypoint-initdb.d
+    networks:
+      - contact-agenda-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "contactuser", "-pcontact123"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    command: --default-authentication-plugin=mysql_native_password
+
+  # Backend API Service
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api-only
+    container_name: contact-agenda-api
+    ports:
+      - "8081:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5000
+      - ConnectionStrings__DefaultConnection=Server=database;Database=contactagenda;User=contactuser;Password=contact123;
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - contact-agenda-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health || true"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Frontend Service
+  frontend:
+    build:
+      context: ./contact-agenda-frontend
+      dockerfile: Dockerfile
+    container_name: contact-agenda-frontend
+    ports:
+      - "3000:8080"
+    depends_on:
+      - api
+    networks:
+      - contact-agenda-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health || true"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # Database Admin Tool (Optional)
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: contact-agenda-phpmyadmin
+    environment:
+      PMA_HOST: database
+      PMA_USER: contactuser
+      PMA_PASSWORD: contact123
+    ports:
+      - "8080:80"
+    depends_on:
+      - database
+    networks:
+      - contact-agenda-network
+    profiles:
+      - admin
+
+networks:
+  contact-agenda-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
+  contact_data:
+    driver: local

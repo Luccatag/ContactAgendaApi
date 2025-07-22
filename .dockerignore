@@ -1,0 +1,67 @@
+# Backend .dockerignore
+
+# Build artifacts
+bin/
+obj/
+out/
+publish/
+
+# Visual Studio
+.vs/
+.vscode/
+*.user
+*.suo
+*.sln.docstates
+
+# Testing
+TestResults/
+*.trx
+coverage/
+*.coverage
+
+# NuGet
+packages/
+*.nupkg
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+
+# Database files (will be handled by volumes)
+*.db
+*.db-journal
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+docs/
+
+# Docker files (except the main one)
+docker-compose*.yml
+Dockerfile.*
+.dockerignore
+
+# Frontend directory (has its own Dockerfile)
+contact-agenda-frontend/
+
+# Scripts
+scripts/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# OS files
+Thumbs.db
+.DS_Store
