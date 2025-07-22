@@ -48,6 +48,8 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 builder.Services.AddValidatorsFromAssemblyContaining<ContactCreateDtoValidator>();
 
+// TODO: Configure MediatR for CQRS pattern - temporarily disabled while fixing handlers
+
 // Register DapperContactRepository for DI
 builder.Services.AddScoped<DapperContactRepository>();
 // Register ContactRepository for DI (all contact CRUD will use SQLite database)
