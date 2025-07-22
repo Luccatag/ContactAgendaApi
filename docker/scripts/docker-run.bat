@@ -43,7 +43,7 @@ goto end
 
 :start
 echo 🟢 Starting Contact Agenda Application...
-echo Using docker-compose-simple.yml (recommended configuration)
+echo Using docker-compose-fullstack.yml (recommended configuration)
 
 REM Check if Docker is running
 docker info >nul 2>&1
@@ -53,7 +53,7 @@ if errorlevel 1 (
 )
 
 REM Start the application
-docker-compose -f docker-compose-simple.yml up -d
+docker-compose -f docker-compose-fullstack.yml up -d
 
 if errorlevel 1 (
     echo ❌ Failed to start application. Check the logs for details.
@@ -74,7 +74,7 @@ goto end
 
 :stop
 echo 🔴 Stopping Contact Agenda Application...
-docker-compose -f docker-compose-simple.yml down
+docker-compose -f docker-compose-fullstack.yml down
 
 if errorlevel 1 (
     echo ❌ Failed to stop application.
@@ -95,7 +95,7 @@ goto end
 echo 📝 Viewing application logs...
 echo Press Ctrl+C to exit log view
 echo.
-docker-compose -f docker-compose-simple.yml logs -f
+docker-compose -f docker-compose-fullstack.yml logs -f
 goto end
 
 :status
@@ -103,7 +103,7 @@ echo 📊 Application Status:
 echo =====================
 
 REM Check if containers are running
-docker-compose -f docker-compose-simple.yml ps | findstr "Up" >nul 2>&1
+docker-compose -f docker-compose-fullstack.yml ps | findstr "Up" >nul 2>&1
 
 if errorlevel 1 (
     echo 🔴 Application is STOPPED
@@ -114,7 +114,7 @@ if errorlevel 1 (
 
 echo 🟢 Application is RUNNING
 echo.
-docker-compose -f docker-compose-simple.yml ps
+docker-compose -f docker-compose-fullstack.yml ps
 echo.
 echo 🌐 Application URLs:
 echo    Frontend: http://localhost:3000
@@ -125,7 +125,7 @@ goto end
 echo 🧹 Cleaning up Docker resources...
 
 REM Stop the application first
-docker-compose -f docker-compose-simple.yml down
+docker-compose -f docker-compose-fullstack.yml down
 
 REM Remove unused containers, networks, images, and build cache
 docker system prune -f
@@ -141,13 +141,13 @@ goto end
 echo 🔨 Rebuilding Contact Agenda Application...
 
 REM Stop application
-docker-compose -f docker-compose-simple.yml down
+docker-compose -f docker-compose-fullstack.yml down
 
 REM Rebuild images
-docker-compose -f docker-compose-simple.yml build --no-cache
+docker-compose -f docker-compose-fullstack.yml build --no-cache
 
 REM Start application
-docker-compose -f docker-compose-simple.yml up -d
+docker-compose -f docker-compose-fullstack.yml up -d
 
 if errorlevel 1 (
     echo ❌ Failed to rebuild application.

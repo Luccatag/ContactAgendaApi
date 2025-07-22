@@ -1,6 +1,14 @@
-# 🐳 Docker Run Guide - Contact Agenda API
+# 🐳 Docker Run Guide - Contact Agenda API### 2. `docker-compose-simple.yml` (Alternative)
+- **Purpose**: Lightweight production setup  
+- **Features**: 
+  - API backend with SQLite database
+  - Vue.js frontend with nginx proxy
+  - Lightweight configuration
+- **Use Case**: When you need minimal resource usage
 
-This guide explains how to run the Contact Agenda application using Docker in different configurations.
+```bash
+docker-compose -f docker-compose-simple.yml up -d
+```ide explains how to run the Contact Agenda application using Docker in different configurations.
 
 ## 📋 Prerequisites
 
@@ -10,58 +18,68 @@ This guide explains how to run the Contact Agenda application using Docker in di
 
 ## 🚀 Quick Start (Recommended)
 
-### Option 1: Simple Configuration (Fastest)
+### Fullstack Configuration
 ```bash
 # Clone the repository
 git clone https://github.com/Luccatag/ContactAgendaApi.git
 cd ContactAgendaApi
 
-# Run the application
-docker-compose -f docker-compose-simple.yml up -d
+# Quick start (uses default fullstack configuration)
+docker-compose up -d
+
+# OR use the convenience scripts
+./start.sh              # Linux/macOS
+.\start.ps1             # Windows PowerShell
 
 # Access the application
 # Frontend: http://localhost:3000
 # API: http://localhost:8081
 ```
 
-### Option 2: Full Stack Configuration
-```bash
-# Run with full stack setup
-docker-compose -f docker-compose-fullstack.yml up -d
+### Using Organized Scripts
+For more advanced usage, check the organized scripts in `docker/scripts/`:
 
-# Access the application
-# Frontend: http://localhost:3000
-# API: http://localhost:8081
+```bash
+# Linux/macOS
+./docker/scripts/docker-run.sh start
+./docker/scripts/docker-run.sh logs
+./docker/scripts/docker-run.sh clean
+
+# Windows PowerShell
+.\docker\scripts\docker-run.ps1 start
+.\docker\scripts\docker-run.ps1 logs
+.\docker\scripts\docker-run.ps1 clean
 ```
 
 ## 📁 Available Docker Compose Files
 
-### 1. `docker-compose-simple.yml` ⭐ **Recommended**
-- **Purpose**: Production-ready minimal setup
+### 1. `docker-compose-fullstack.yml` ⭐ **Recommended**
+- **Purpose**: Complete development environment
+- **Features**:
+  - Full backend API with SQLite database
+  - Vue.js frontend with nginx proxy
+  - Health checks enabled
+  - Volume for data persistence
+  - Optimized for both development and production
+- **Use Case**: Primary deployment method
+
+```bash
+docker-compose up -d
+```
+
+### 2. `docker/compose/docker-compose-simple.yml` (Alternative)
+- **Purpose**: Minimal setup (alternative)
 - **Features**: 
   - API backend with SQLite database
   - Vue.js frontend with nginx proxy
-  - Optimized for performance
-- **Use Case**: Daily development and production deployment
+  - Lightweight configuration
+- **Use Case**: When you need minimal resource usage
 
 ```bash
-docker-compose -f docker-compose-simple.yml up -d
+docker-compose -f docker/compose/docker-compose-simple.yml up -d
 ```
 
-### 2. `docker-compose-fullstack.yml`
-- **Purpose**: Complete development environment
-- **Features**:
-  - Full backend API
-  - Frontend with all development tools
-  - Health checks enabled
-  - Volume for data persistence
-- **Use Case**: Full-featured development
-
-```bash
-docker-compose -f docker-compose-fullstack.yml up -d
-```
-
-### 3. `docker-compose-database.yml`
+### 3. `docker/compose/docker-compose-database.yml`
 - **Purpose**: Enhanced database support
 - **Features**:
   - Multiple database options
@@ -145,45 +163,48 @@ volumes:
 
 ### Start Services
 ```bash
-# Start all services in background
-docker-compose -f docker-compose-simple.yml up -d
+# Start all services in background (using default configuration)
+docker-compose up -d
 
 # Start with logs visible
-docker-compose -f docker-compose-simple.yml up
+docker-compose up
+
+# Using specific configuration
+docker-compose -f docker/compose/docker-compose-fullstack.yml up -d
 
 # Start specific service
-docker-compose -f docker-compose-simple.yml up -d api
+docker-compose up -d api
 ```
 
 ### Stop Services
 ```bash
 # Stop all services
-docker-compose -f docker-compose-simple.yml down
+docker-compose down
 
 # Stop and remove volumes
-docker-compose -f docker-compose-simple.yml down -v
+docker-compose down -v
 
 # Stop specific service
-docker-compose -f docker-compose-simple.yml stop api
+docker-compose stop api
 ```
 
 ### View Logs
 ```bash
 # View all logs
-docker-compose -f docker-compose-simple.yml logs
+docker-compose logs
 
 # View specific service logs
-docker-compose -f docker-compose-simple.yml logs api
-docker-compose -f docker-compose-simple.yml logs frontend
+docker-compose logs api
+docker-compose logs frontend
 
 # Follow logs in real-time
-docker-compose -f docker-compose-simple.yml logs -f
+docker-compose logs -f
 ```
 
 ### Check Status
 ```bash
 # View running containers
-docker-compose -f docker-compose-simple.yml ps
+docker-compose ps
 
 # Check health status
 docker ps
@@ -214,17 +235,17 @@ docker ps -a
 ### Database Issues
 ```bash
 # Reset database (removes all data)
-docker-compose -f docker-compose-simple.yml down
+docker-compose down
 rm contacts.db
-docker-compose -f docker-compose-simple.yml up -d
+docker-compose up -d
 ```
 
 ### Rebuild Containers
 ```bash
 # Rebuild and restart
-docker-compose -f docker-compose-simple.yml down
-docker-compose -f docker-compose-simple.yml build --no-cache
-docker-compose -f docker-compose-simple.yml up -d
+docker-compose down
+docker-compose build --no-cache
+docker-compose up -d
 ```
 
 ## 🧹 Cleanup Commands
@@ -232,7 +253,7 @@ docker-compose -f docker-compose-simple.yml up -d
 ### Remove Everything
 ```bash
 # Stop and remove containers, networks, volumes
-docker-compose -f docker-compose-simple.yml down -v
+docker-compose down -v
 
 # Remove all unused Docker resources
 docker system prune -a -f

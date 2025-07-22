@@ -1,36 +1,27 @@
-# Docker Compose configuration for Contact Agenda API
-# Production-ready multi-container setup
-
 version: '3.8'
 
 services:
   # Backend API Service
-  backend:
+  api:
     build:
       context: .
       dockerfile: Dockerfile
-      target: runtime
     container_name: contact-agenda-api
     ports:
-      - "8080:5000"
+      - "8081:5000"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:5000
-      - ConnectionStrings__DefaultConnection=Data Source=/app/data/contacts.db
     volumes:
-      - contact_data:/app/data
+      - ./contacts.db:/app/contacts.db
     networks:
-      - contact-network
-    restart: unless-stopped
+      - contact-agenda-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/swagger"]
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
-    labels:
-      - "com.contactagenda.service=backend"
-      - "com.contactagenda.version=1.0"
 
   # Frontend Service
   frontend:
@@ -40,32 +31,21 @@ services:
     container_name: contact-agenda-frontend
     ports:
       - "3000:8080"
+    depends_on:
+      - api
     networks:
-      - contact-network
-    restart: unless-stopped
+      - contact-agenda-network
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 30s
-    labels:
-      - "com.contactagenda.service=frontend"
-      - "com.contactagenda.version=1.0"
-    depends_on:
-      backend:
-        condition: service_healthy
 
-# Named volumes for data persistence
+networks:
+  contact-agenda-network:
+    driver: bridge
+
 volumes:
   contact_data:
     driver: local
-    labels:
-      - "com.contactagenda.volume=database"
-
-# Custom network for service communication
-networks:
-  contact-network:
-    driver: bridge
-    labels:
-      - "com.contactagenda.network=main"
