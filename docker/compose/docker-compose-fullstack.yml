@@ -1,10 +1,8 @@
-version: '3.8'
-
 services:
   # Backend API Service
   api:
     build:
-      context: .
+      context: ../../
       dockerfile: Dockerfile
     container_name: contact-agenda-api
     ports:
@@ -13,7 +11,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:5000
     volumes:
-      - ./contacts.db:/app/contacts.db
+      - ../../contacts.db:/app/contacts.db
     networks:
       - contact-agenda-network
     healthcheck:
@@ -26,7 +24,7 @@ services:
   # Frontend Service
   frontend:
     build:
-      context: ./contact-agenda-frontend
+      context: ../../contact-agenda-frontend
       dockerfile: Dockerfile
     container_name: contact-agenda-frontend
     ports:

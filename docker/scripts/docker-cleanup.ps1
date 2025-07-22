@@ -1,5 +1,9 @@
 # Docker cleanup script for Contact Agenda API (PowerShell)
 
+# Navigate to root directory
+$rootPath = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
+Set-Location $rootPath
+
 Write-Host "🧹 Cleaning up Contact Agenda API Docker resources..." -ForegroundColor Blue
 
 try {

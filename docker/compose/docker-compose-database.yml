@@ -13,7 +13,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./database/init:/docker-entrypoint-initdb.d
+      - ../../database/init:/docker-entrypoint-initdb.d
     networks:
       - contact-agenda-network
     healthcheck:
@@ -25,8 +25,8 @@ services:
   # Backend API Service
   api:
     build:
-      context: .
-      dockerfile: Dockerfile.api-only
+      context: ../../
+      dockerfile: Dockerfile
     container_name: contact-agenda-api
     ports:
       - "8081:5000"
@@ -49,7 +49,7 @@ services:
   # Frontend Service
   frontend:
     build:
-      context: ./contact-agenda-frontend
+      context: ../../contact-agenda-frontend
       dockerfile: Dockerfile
     container_name: contact-agenda-frontend
     ports:

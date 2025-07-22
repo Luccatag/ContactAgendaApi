@@ -3,6 +3,9 @@
 
 set -e
 
+# Navigate to root directory
+cd "$(dirname "$0")/../.."
+
 echo "🧹 Cleaning up Docker resources for Contact Agenda API..."
 
 # Stop and remove containers

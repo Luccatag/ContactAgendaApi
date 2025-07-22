@@ -1,6 +1,10 @@
 # Docker build script for Contact Agenda API (PowerShell)
 
-Write-Host "🐳 Building Contact Agenda API Docker Images..." -ForegroundColor Blue
+# Navigate to root directory
+$rootPath = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
+Set-Location $rootPath
+
+Write-Host "Building Contact Agenda API Docker Images..." -ForegroundColor Blue
 
 try {
     # Build backend

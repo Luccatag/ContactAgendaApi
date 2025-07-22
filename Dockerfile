@@ -6,15 +6,23 @@ WORKDIR /app
 # Copy csproj files and restore dependencies
 # This is done first to leverage Docker layer caching
 COPY *.csproj ./
-COPY ContactAgendaApi.Tests/*.csproj ./ContactAgendaApi.Tests/
 RUN dotnet restore
 
-# Copy source code and build
-COPY . .
+# Copy source code and build (exclude test project)
+COPY Controllers/ ./Controllers/
+COPY CQRS/ ./CQRS/
+COPY DTOs/ ./DTOs/
+COPY Interfaces/ ./Interfaces/
+COPY Migrations/ ./Migrations/
+COPY Models/ ./Models/
+COPY Properties/ ./Properties/
+COPY Repositories/ ./Repositories/
+COPY Services/ ./Services/
+COPY Validators/ ./Validators/
+COPY Program.cs ./
+COPY MappingProfile.cs ./
+COPY appsettings*.json ./
 RUN dotnet build -c Release --no-restore
-
-# Run tests (optional - comment out for faster builds)
-RUN dotnet test --no-build -c Release --logger trx --results-directory /testresults
 
 # Publish the application
 RUN dotnet publish -c Release --no-build -o /app/publish

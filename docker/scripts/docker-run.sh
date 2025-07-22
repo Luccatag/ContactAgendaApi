@@ -11,6 +11,9 @@ if ! docker images | grep -q contact-agenda; then
     ./scripts/docker-build.sh
 fi
 
+# Navigate to root directory
+cd "$(dirname "$0")/../.."
+
 # Start services
 echo "🔄 Starting services with Docker Compose..."
 docker-compose up -d
@@ -31,8 +34,8 @@ docker-compose logs --tail=20
 echo ""
 echo "✅ Application is running!"
 echo "🌐 Frontend: http://localhost:3000"
-echo "🔧 Backend API: http://localhost:8080"
-echo "📚 Swagger UI: http://localhost:8080/swagger"
+echo "🔧 Backend API: http://localhost:8081"
+echo "📚 Swagger UI: http://localhost:8081/swagger"
 echo ""
 echo "🛑 To stop: docker-compose down"
 echo "📋 To view logs: docker-compose logs -f"

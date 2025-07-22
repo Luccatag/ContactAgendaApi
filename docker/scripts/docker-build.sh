@@ -3,6 +3,9 @@
 
 set -e
 
+# Navigate to root directory
+cd "$(dirname "$0")/../.."
+
 echo "🐳 Building Contact Agenda API Docker Images..."
 
 # Build backend
