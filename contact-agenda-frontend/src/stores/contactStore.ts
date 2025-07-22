@@ -102,6 +102,10 @@ export const useContactStore = defineStore('contacts', () => {
    */
   const contactExistsByEmail = computed(() => {
     return (email: string) => {
+      // Safety check: ensure contacts.value is an array
+      if (!Array.isArray(contacts.value)) {
+        return false
+      }
       return contacts.value.some(contact => 
         contact.email.toLowerCase() === email.toLowerCase()
       )

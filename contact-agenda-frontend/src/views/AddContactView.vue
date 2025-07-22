@@ -63,13 +63,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useContactStore } from '../stores/contactStore'
 
 // Initialize router and contact store
 const router = useRouter()
 const contactStore = useContactStore()
+
+// Ensure contacts are loaded when component mounts
+onMounted(async () => {
+  await contactStore.fetchContacts()
+})
 
 interface FormData {
   name: string
