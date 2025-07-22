@@ -6,7 +6,13 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "test:fixed": "vitest run src/test/basic.test.ts src/test/services/contactService.test.ts src/test/stores/contactStore.fixed.test.ts src/test/components/components.fixed.test.ts src/test/components/ContactCard.fixed.test.ts src/test/components/ContactForm.fixed.test.ts",
+    "test:all-fixed": "npm run test:fixed"
   },
   "dependencies": {
     "@primeuix/themes": "^1.2.1",

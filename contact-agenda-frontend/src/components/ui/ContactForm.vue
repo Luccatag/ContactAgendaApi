@@ -162,13 +162,18 @@ const handleSubmit = async () => {
     // Create contact using store action
     // Store handles optimistic updates and error recovery
     const newContact = await contactStore.addContact(formData)
-    successMessage.value = `Contact "${newContact.name}" added successfully!`
     
-    emit('submitted', newContact)
-    emit('success', newContact)
-    
-    // Reset form after successful submission
-    resetForm()
+    if (newContact) {
+      successMessage.value = `Contact "${newContact.name}" added successfully!`
+      
+      emit('submitted', newContact)
+      emit('success', newContact)
+      
+      // Reset form after successful submission
+      resetForm()
+    } else {
+      errorMessage.value = 'Failed to create contact'
+    }
     
   } catch (error) {
     errorMessage.value = error instanceof Error ? error.message : 'Failed to add contact'
